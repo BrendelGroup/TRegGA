@@ -1,0 +1,269 @@
+#Makefile_denovo-orig
+#
+#Makefile for step 2 of reference-guided assembly of rice cultivar LABEL genome segments:
+#
+# de novo assembly of reads
+#
+#Version: August 14, 2015.
+
+#Usage: 
+#
+#	make -j X -f Makefile_denovo-LABEL >& err
+#
+#where X is the number of processors available.
+
+#Optional clean-up:
+#
+#	make -f Makefile_denovo-LABEL cleanup
+
+#Please be careful while editing the Makefile as it is 'tab-sensitive'.
+#Typical customization should only involve apppropriate editing of the variables in the next section.
+
+##########################Variable Settings#####################################
+###
+
+SYNONYM            =  LABEL#  Replace LABEL with an appropriate cultivar name
+TRegGA_DIR         =  /scratch/TRegGA/prj
+denovo_DIR         =  ${TRegGA_DIR}/assembly/denovo/${SYNONYM}
+
+READS_DIR          =  ${TRegGA_DIR}/reads/${SYNONYM}
+READS_1            =  ${READS_DIR}/${SYNONYM}_1.fq#  The quality-filtered and trimmed forward reads from Makefile_GRP step
+READS_2            =  ${READS_DIR}/${SYNONYM}_2.fq#  The quality-filtered and trimmed reverse reads from Makefile_GRP step
+
+# Uncomment one of the following REFERENCE specifications and edit the appropriate section in
+# the following if-block.  These lines specify the reference genome (and annotation) to be used by QUAST.
+#
+REFERENCE            = rice_indica
+#REFERENCE            = rice_japonica
+#REFERENCE            = local
+
+ifeq ($(REFERENCE), rice_indica)
+	REF_DIR            =  ${TRegGA_DIR}/reference/${REFERENCE}
+	TARGET_SEQ         =  ${REF_DIR}/OsiCHR.fa
+	TARGET_GFF         =  ${REF_DIR}/OsiCHR.gff3
+else ifeq ($(REFERENCE), rice_japonica)
+	REF_DIR            =  ${TRegGA_DIR}/reference/${REFERENCE}
+else
+	REF_DIR            =  ${TRegGA_DIR}/reference/${REFERENCE}
+endif
+
+# Workflow specification:
+#   The complete workflow would first run KmerGenie to determine the best k-mer for the second step,
+#   the SOAPdenovo2 assembly of reads.  The quality of the assembly will be assessed relative to
+#   specified reference sequence (and annotation) using QUAST.  GapFiller is used to seek improvements
+#   on the first assembly, and the gap-filled assembly is also assessed by QUAST.
+#
+#   Optionally, different steps of the workflow can be omitted by setting parameters below as follows:
+#
+#   set SPO-K = k, where k>0 to skip running KmerGenie and use the specified value for k-mer instead
+#   set QTO-t = 0 to skip QUAST assembly assessment
+#   set GFO-i = 0 to skip running GapFiller
+
+# Program options specification:
+#
+KMERGENIE_DIR      =  /usr/local/src/NGS-DIR/KmerGenie/kmergenie-1.6950
+KMERGENIE_OPTIONS  =  -k ${KGO-k} -l ${KGO-l} -s ${KGO-s} -t ${KGO-t}
+#
+KGO-k     =      63#  largest k-mer size to consider
+KGO-l     =      31#  smallest k-mer size to consider
+KGO-s     =       4#  interval between consecutive kmer sizes
+KGO-t     = NUMPROC#  number of threads
+
+
+#
+SOAP_ASSEMBLY     :=  ${SYNONYM}-soap.scafSeq
+SOAP_DIR           =  /usr/local/src/NGS-DIR/SOAPdenovo2/SOAPdenovo2-bin-LINUX-generic-r240
+SOAP_OPTIONS       =  ${SPO-R} -p ${SPO-p} -o ${SPO-o} 1> ${SYNONYM}-soap.log 2> ${SYNONYM}-soap.err
+#
+SPO-R      =     -R#  resolve repeats by reads, [NO]
+SPO-p      = NUMPROC#  number of cpu for use, [8]
+SPO-o      =    ${SYNONYM}-soap#  prefix of output graph file name
+SPO-K      =      0#  kmer size (min 13, max 63/127):[23]; if set to 0, the workflow will run KmerGenie to detetermine the best k automatically
+
+
+# SOAPdenovo2.conf
+max_rd_len =     83#  maximal read length
+avg_ins    =    500#  average insert size of this library
+reverse_seq  =    0#  if the read sequences need to be complementarily reversed
+asm_flags  =      3#  1(only contig assembly), 2 (only scaffold assembly), 3(both contig and scaffold assembly), 4 (only gap closure).
+rd_len_cutoff =  83#  assembler will cut the reads to this length
+rank       =      1#  in which order the reads are used for scaffold assembly.
+pair_num_cutoff = 3#  cutoff value of pair number for a reliable connection between two contigs or pre-scaffolds.
+map_len    =     32#  minimun alignment length between a read and a contig required for a reliable read location in the "map" step.
+q1    =  ${READS_1}#  a pair of fastq file
+q2    =  ${READS_2}#  a pair of fastq file
+
+
+#
+QUAST              =  /usr/local/src/NGS-DIR/QUAST/quast-2.3
+SOAP-QUAST         =  ${denovo_DIR}/${SYNONYM}-SOAP-QUAST/report.pdf
+GF-QUAST           =  ${denovo_DIR}/${SYNONYM}-GF-QUAST/report.pdf
+QUAST_OPTIONS      =  -t ${QTO-t} ${QTO-e} ${QTO-s}
+#
+QTO-t =     NUMPROC#  Maximum number of threads; set to 0 to not run QUAST
+QTO-e = --eukaryote#  Genome is eukarytic. Affects gene finding and contig alignment.
+QTO-s = --scaffolds#  The assemblies are scaffolds (rather than contigs). QUAST will add split versions of assemblies to the comparison.
+
+
+#
+GAPFILLED_ASSEMBLY =  ${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa
+GAPFILLER_DIR      =  /usr/local/src/NGS-DIR/GAPFILLER/GapFiller_v1-10_linux-x86_64
+GAPFILLER_OPTIONS  =  -m ${GFO-m} -o ${GFO-o} -r ${GFO-r} -d ${GFO-d} -n ${GFO-n} -t ${GFO-t} \
+                      -i ${GFO-i} -g ${GFO-g} -T ${GFO-T} ${GFO-S}
+#
+GFO-m     =      30#  minimum overlap for gapclosing
+GFO-o     =       5#  minimum coverage for gapclosing
+GFO-r     =     0.7#  minimum base ratio for overhang bases
+GFO-d     =      50#  allowed gapclose difference
+GFO-n     =      10#  minimum overlap for merging
+GFO-t     =       5#  number of trimmed nucleotides at gap ends
+GFO-i     =       3#  maximum number of iterations; set to 0 to not run GapFiller
+GFO-g     =       1#  maximum number of gaps for bowtie mapping (bowtie -v option argument)
+GFO-T     = NUMPROC#  number of threads
+GFO-S      =       #  set to -S for a re-run without re-reading the files
+#
+# GapFiller.conf
+GFC-1      = lib001#  Name of the library. 
+GFC-2      =    bwa#  Name of the aligner, either bowtie, bwa or bwasw
+GFC-3 =  ${READS_1}#  Fasta or fastq files for both ends
+GFC-4 =  ${READS_2}#  Fasta or fastq files for both ends
+GFC-5      =    500#  expected/observed inserted size between paired reads
+GFC-6      =   0.25#  minimum allowed error
+GFC-7      =     FR#  orientation of the paired-reads
+
+
+###
+################################################################################
+### ! Typically there would be no need for further editing below this line ! ###
+##
+#
+##
+###
+##########################Makefile Execution####################################
+###
+##
+#
+
+ifeq (${SPO-K}, 0)
+	MAKETARGETS = kmergenie ${SOAP_ASSEMBLY}
+	SOAP_ASSEMBLY_DEPENDENCIES = SOAPdenovo2.conf bestkmerset
+else
+	MAKETARGETS = ${SOAP_ASSEMBLY}
+	SOAP_ASSEMBLY_DEPENDENCIES = SOAPdenovo2.conf
+	BESTKMER = ${SPO-K}
+endif
+ifneq (${QTO-t}, 0)
+	MAKETARGETS += ${SYNONYM}-SOAP-QUAST/report.html
+endif
+ifneq (${GFO-i}, 0)
+	MAKETARGETS += ${GAPFILLED_ASSEMBLY}
+	ifneq (${QTO-t}, 0)
+		MAKETARGETS += ${SYNONYM}-GF-QUAST/report.html
+	endif
+endif
+
+
+
+all:	${MAKETARGETS}
+.PHONY:	show
+
+show:	
+	@echo ""
+	@echo "Show variables {for debugging; invoke with make -f Makefile_denovo-IRRB7 show}:"
+	@echo ${MAKETARGETS}
+	@echo ""
+
+
+## 1. KmerGenie:
+#
+kmergenie: preparedreads kmergenie-filelist.txt kmergenie-stdout.txt
+
+preparedreads:
+ifeq ("$(wildcard ${READS_1})","")
+	$(error "${READS_1} not found.  Please make sure that the specified reads have been prepared.")
+endif
+ifeq ("$(wildcard ${READS_2})","")
+	$(error "${READS_2} not found.  Please make sure that the specified reads have been prepared.")
+endif
+
+
+kmergenie-filelist.txt:	preparedreads
+ifeq ("$(wildcard {READS_1})","")
+	mkdir kmergenie-histograms
+endif
+	ls -1 ${READS_1} ${READS_2} > kmergenie-filelist.txt
+
+kmergenie-stdout.txt:	kmergenie-filelist.txt
+	${KMERGENIE_DIR}/kmergenie ${KMERGENIE_OPTIONS} kmergenie-filelist.txt > kmergenie-stdout.txt
+
+
+## 2. denovo Assembly by SOAPdenovo2
+#
+SOAPdenovo2.conf:		preparedreads
+	@echo "#maximal read length" > SOAPdenovo2.conf
+	@echo "max_rd_len=${max_rd_len}" >> SOAPdenovo2.conf
+	@echo "[LIB]" >> SOAPdenovo2.conf
+	@echo "#average insert size" >> SOAPdenovo2.conf
+	@echo "avg_ins=${avg_ins}" >> SOAPdenovo2.conf
+	@echo "#if sequence needs to be reversed" >> SOAPdenovo2.conf
+	@echo "reverse_seq=${reverse_seq}" >> SOAPdenovo2.conf
+	@echo "#in which part(s) the reads are used" >> SOAPdenovo2.conf
+	@echo "asm_flags=${asm_flags}" >> SOAPdenovo2.conf
+	@echo "#use only first n bps of each read" >> SOAPdenovo2.conf
+	@echo "rd_len_cutoff=${rd_len_cutoff}" >> SOAPdenovo2.conf
+	@echo "#in which order the reads are used while scaffolding" >> SOAPdenovo2.conf
+	@echo "rank=${rank}" >> SOAPdenovo2.conf
+	@echo "# cutoff of pair number for a reliable connection (at least 3 for short insert size)" >> SOAPdenovo2.conf
+	@echo "pair_num_cutoff=${pair_num_cutoff}" >> SOAPdenovo2.conf
+	@echo "#minimum aligned length to contigs for a reliable read location (at least 32 for short insert size)" >> SOAPdenovo2.conf
+	@echo "map_len=${map_len}" >> SOAPdenovo2.conf
+	@echo "#a pair of fastq file, read 1 file should always be followed by read 2 file" >> SOAPdenovo2.conf
+	@echo "q1=${q1}" >> SOAPdenovo2.conf
+	@echo "q2=${q2}" >> SOAPdenovo2.conf
+
+${SOAP_ASSEMBLY}:	${SOAP_ASSEMBLY_DEPENDENCIES}
+	${SOAP_DIR}/SOAPdenovo-63mer all -s SOAPdenovo2.conf -K ${BESTKMER} ${SOAP_OPTIONS}
+
+bestkmerset:	kmergenie-stdout.txt
+	egrep "^best k:" kmergenie-stdout.txt > bestkmerset
+	$(eval BESTKMER = $(shell egrep "^best k:" kmergenie-stdout.txt | awk -F" " '{print $$3}'))
+
+
+## 4. QUAST for assembly assessment
+#
+${SYNONYM}-SOAP-QUAST/report.html: ${SOAP_ASSEMBLY} ${TARGET_SEQ}
+	python ${QUAST}/quast.py ${SOAP_ASSEMBLY} -o ${SYNONYM}-SOAP-QUAST -R ${TARGET_SEQ} -G ${TARGET_GFF} ${QUAST_OPTIONS}
+
+
+## 5. GapFiller to fill the gaps in soap.scafSeq using PE reads
+#
+GapFiller.conf:		preparedreads
+	@echo "${GFC-1} ${GFC-2} ${GFC-3} ${GFC-4} ${GFC-5} ${GFC-6} ${GFC-7}" > GapFiller.conf
+
+${GAPFILLED_ASSEMBLY}:	GapFiller.conf ${SYNONYM}-soap.scafSeq
+	perl ${GAPFILLER_DIR}/GapFiller.pl -l GapFiller.conf -s ${SYNONYM}-soap.scafSeq -b ${SYNONYM}-GF ${GAPFILLER_OPTIONS}
+
+## 6. GF-QUAST
+#
+${SYNONYM}-GF-QUAST/report.html: ${GAPFILLED_ASSEMBLY} ${TARGET_SEQ}
+	python ${QUAST}/quast.py ${GAPFILLED_ASSEMBLY} -o ${SYNONYM}-GF-QUAST -R ${TARGET_SEQ} -G ${TARGET_GFF} ${QUAST_OPTIONS}
+
+
+
+## Cleanup:
+#
+cleanup:		kmergenie-histograms-dir soap-dir ${SOAP_ASSEMBLY} ${GAPFILLED_ASSEMBLY}
+kmergenie-histograms-dir:	
+ifeq ("$(wildcard ./kmergenie-histograms)","")
+	mkdir kmergenie-histograms
+endif
+
+soap-dir:
+ifeq ("$(wildcard ./${SYNONYM}-SOAP)","")
+	mkdir ${SYNONYM}-SOAP
+endif
+	\mv histogram* kmergenie-histograms /
+	\mv ${SYNONYM}-soap.* ${SYNONYM}-SOAP /
+	\ln -s ${SYNONYM}-SOAP/${SYNONYM}-soap.contig . /
+	\ln -s ${SYNONYM}-SOAP/${SYNONYM}-soap.scafSeq . /
+	\ln -s ${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa ${SYNONYM}-GF.fa

@@ -1,0 +1,9 @@
+"reads" directory
+
+subdirectories correspond to the named cultivars; files <LABEL>/*_1.fq and <LABEL>/*_2.fq
+are trimmed, quality-controlled reads for use in subsequent analyses.
+
+Use "xgetreads" for simplified retrieval of sequence information (and fastq data, as needed).
+For help, type
+
+xgetreads

@@ -1,0 +1,100 @@
+Makefile_TRegGA-orig is the master makefile to run the complete TRegGA workflow, from
+read preparation to de novo assembly and reference-guided assembly.  The individual steps
+(read preparation; target selection; de novo assembly; reference-guided assembly) can
+be executed individually using the master makefile with pertinent targets or by running
+appropriately edited makefiles in the respective subdirectories.  Using the master
+makefile facilitates the process by editing 0Record-* scripts that in turn create and
+run subtask makefiles.
+
+The dependency structure of the subtasks is as follows:
+
+reads  -> target
+  |    \     |
+  |     \    |
+  >      >   >
+denovo -> rfguided
+
+The all-in-one excution should work well in standard cases.  Fine tuning of parameters
+may best be done by editing copies of the subtask makefiles.
+
+The following variables must be set in a copy of Makefile_TRegGA-orig:
+
+CHECKONLY	yes [default] or no [means that you actually want to run make]
+NUMPROC		e.g., 8
+
+CULTIVAR	e.g., "DA GANG ZHAN"
+SYNONYM		e.g., Dagangzhan
+
+TARGET		e.g., NbSWEET13
+REFERENCE	e.g., OsjCHR12
+FROM		e.g., 17290000
+TO		e.g., 17320000
+
+From the commandline, the entire workflow could be executed as follows:
+
+
+	make CHECKONLY=yes NUMPROC=8 CULTIVAR='\"DA GANG ZHAN\"' SYNONYM=Dagangzhan TARGET=NbSWEET13 REFERENCE=OsjCHR12 FROM=17290000 TO=17320000 -d -f Makefile_TRegGA-orig >& showme
+
+
+Because we set CHECKONLY=yes, this command should only print to file "showme" what will be executed.
+(Note: CHECKONLY=yes is the default, so you could leave out this argument for the same result.)
+The "-d" flag to make is optional.  It will show the dependencies.
+
+	egrep "remake" showme
+
+will list all the targets that need to be remade.
+
+In detail, what is meant to be executed is the following:
+1) In reads:
+	Create a script file 0Record-Dagangzhan and run the script.  This will create a
+	subdirectory Dagangzhan, put Makefile_GPR_Dagangzhan in that directory, and run it.
+2) In targets:
+	Create a script file 0Record-NbSWEET13 and run the script.  This will create
+	files NBSWEET13.*, needed for the reference-guided assembly.
+3) In assembly/denovo:
+	Create a script file 0Record-Dagangzhan and run the script.  This will create a
+	subdirectory Dagangzhan, put Makefile_denovo_Dagangzhan in that directory, and run it.
+4) In assembly/rfguided:
+	Create a script file 0Record-Dagangzhan-on-NbSWEET13 and run the script.  This
+	will create a subdirectory Dagangzhan-on-NbSWEET13, put
+	Makefile_RGA_Dagangzhan-on-NbSWEET13 in that directory, and run it.
+
+If all looks ok, then to run make, simply replace the CHECKONLY=yes with CHECKONLY=no (and leave out the -d):
+
+	make CHECKONLY=no NUMPROC=8 CULTIVAR='\"DA GANG ZHAN\"' SYNONYM=Dagangzhan TARGET=NbSWEET13 REFERENCE=OsjCHR12 FROM=17290000 TO=17320000 -f Makefile_TRegGA-orig >& err
+
+Notes:
+- The CULTIVAR argument must be in quotes (allowing spaces).
+- The SYNONYM argument must be a single word (no spaces, special characters allowed).
+- The TARGET argument should uniquely identify the target specified by REFERENCE, FROM - TO range.
+  If you want to change the range later, then use a different label or remove the existing TARGET.*
+  files in subdirectory targets.
+
+
+Targets for the subtasks are identified by the following files:
+
+reads		${TRegGA_DIR)/reads/SYNONYM/SYNONYM_1.fa
+targets		${TRegGA_DIR}/targets/TARGET.embl
+denovo		${TRegGA_DIR}/assembly/denovo/SYNONYM/SYNONYM-GF/SYNONYM-GF.gapfilled.final.fa
+rfguided	${TRegGA_DIR}/assembly/rfguided/SYNONYM-on-TARGET/Makefile_rfguided_SYNONYM-on-TARGET
+
+where ${TRegGA_DIR} is the TRegGA home directory, and SYNONYM and TARGET are appropriately substituted.
+Thus
+
+	make CHECKONLY=no NUMPROC=16 CULTIVAR='\"DA GANG ZHAN\"' SYNONYM=Dagangzhan -f Makefile_TRegGA-orig ${TRegGA_DIR)/reads/Dagangzhan/Dagangzhan_1.fa
+
+would use 16 processors to prepare the Dagangzhan reads (and do no more).
+
+	make CHECKONLY=no NUMPROC=12 CULTIVAR='\"DA GANG ZHAN\"' SYNONYM=Dagangzhan -f Makefile_TRegGA-orig ${TRegGA_DIR)/assembly/denovo/Dagangzhan/Dagangzhan-GF/Dagangzhan-GF.gapfilled.final.fa
+
+would use 12 processors to run the Dagangzhan de novo assembly (preparing the reads, unless already present;
+but do no more than the de novo assembly).
+
+	make CHECKONLY=no TARGET=NbEL2 REFERENCE=OsjCHR3 FROM=460000 TO=480000 -f Makefile_TRegGA-orig ${TRegGA_DIR}/targets/NbEL2.embl >& err
+
+would produce the files for a new target (NbEL2).
+
+	make CHECKONLY=no NUMPROC=8 CULTIVAR='\"DA GANG ZHAN\"' SYNONYM=Dagangzhan TARGET=NbEL2 REFERENCE=OsjCHR3 FROM=460000 TO=480000 -f Makefile_TRegGA-orig >& err
+
+would use 8 processors to run the reference-guided assembly of Dagangzhan on this second target (NbEL2),
+using the existing reads and de novo assembly.

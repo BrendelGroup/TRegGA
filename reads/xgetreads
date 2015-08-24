@@ -1,0 +1,63 @@
+#!/bin/sh
+# xgetreads
+#
+# Version:  August 13, 2015 (Volker)
+
+
+if [ $# -lt 1 ]; then
+  echo "Usage: xgetreads <cultivar_name> <synonym> [terse]"
+  echo
+  echo "Example:"
+  echo "  xgetreads DV86"
+  echo "    (to print information on cultivar DV86)"
+  echo "  xgetreads DV86 | grep wget | bash"
+  echo "    (to get all the reads for cultivar DV86)"
+  echo ""
+  exit
+fi
+
+cultivar=$1
+if [ $# -eq 1 ]; then
+  synonym=$1
+else
+  synonym=$2
+fi
+verbose=1
+if [ $# -eq 3 ]; then
+  verbose=0
+fi
+
+echo "# Cultivar (DNA_VARNAME) name:	$cultivar"
+echo ""
+echo "#Description (from file rice_line_metadata_20140521.tsv):"
+echo ""
+egrep "	$cultivar	" *tsv
+echo ""
+
+sample=`egrep "	$cultivar	" *tsv | cut -d"	" -f1`
+echo "Sample (sample_alias) name:	$sample"
+
+echo ""
+echo "First entry in file seq_file_mapping_to_SRA.txt:"
+echo ""
+egrep "$sample" *txt | head -1
+echo ""
+
+if [ $verbose -eq 1 ]; then
+  echo "Commands to retrieve all read data files:"
+  echo ""
+  egrep "$sample" *txt | cut -d"	" -f12 | sed -e "s/ftp/wget ftp/;" -e "s/_1fastq.gz/_1.fastq.gz;/;" -e "s/_2fastq.gz/_2.fastq.gz;/;"
+fi
+
+msample=`egrep "$sample" *txt | cut -d"	" -f12 | cut -d"/" -f6 | sort -u`
+maccessions=`egrep "$sample" *txt | cut -d"	" -f12 | cut -d"/" -f7 | sort -u | tr '\n' ' '`
+
+if [ $verbose -eq 1 ]; then
+  echo ""
+  echo "Or use the following inserts for Makefile_GPR-$cultivar:"
+  echo ""
+fi
+echo "	SAMPLE            = $msample#  download directory for $cultivar"
+echo "	SYNONYM           = $synonym#  chosen synonym for $cultivar"
+echo "	SRAFTPSITE        = ftp://ftp.sra.ebi.ac.uk/vol1/fastq/\${SAMPLE}"
+echo "	ACCESSIONS        = $maccessions#  accessions for $cultivar"

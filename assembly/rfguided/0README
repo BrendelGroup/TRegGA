@@ -1,0 +1,30 @@
+TRegGA Step 3: reference-assisted assembly of reads.
+
+!!! UNEDITED TEXT VERSION FROM Chun-Yuan:
+
+Use an edited version of the template Makefile_RGA-orig to assemble contigs and
+scaffolds against user-defined target genome region (AlignGraph), then generate
+a pseudomolecule based on the targeted reference genome region (ABACAS). Lastly,
+it annotates the new assembly by transferring those from the reference (RATT),
+with optional annotation via spliced alignments (GenomeThreader). Several
+steps are evaluated for assembly qualities such as contig N50 and gene numbers (QUAST). 
+
+You should carefully select AlignGraph and RATT options appropriate to your
+particular data sets.
+
+Usage demonstration:
+
+1) ./xdemo
+
+    will generate Makefile_RGA-demo
+   
+	make -j X -f Makefile_RGA-demo >& err
+ 
+	where X is the number of processors available.
+
+
+2) ./xdemo-cleanup
+
+	will clean up the current directory to its original state, deleting the demo files.
+
+

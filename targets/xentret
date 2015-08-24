@@ -1,0 +1,6 @@
+#!/bin/tcsh
+
+foreach chr (1 2 3 4 5 6 7 8 9 10 11 12)
+  entret -sequence /home/TRegGA/prj/reference/rice_japonica/Oryza_sativa.IRGSP-1.0.26.embl:$chr -outfile OsjCHR$chr.embl
+  entret -sequence /home/TRegGA/prj/reference/rice_indica/Oryza_indica.ASM465v1.26.embl:$chr    -outfile OsiCHR$chr.embl
+end

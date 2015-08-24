@@ -1,0 +1,158 @@
+#Makefile_TRegGA
+#
+#Makefile to run all TRegGA workflow components with one command ...
+#
+#Version: August 21, 2015.
+
+
+#Usage:
+#
+#  make -j X -f Makefile_TRegGA >& err
+#
+#where X is the number of processors to be used.
+
+#Optional clean-up:
+#
+#  make -f Makefile_TRegGA cleanup
+
+#Please be careful while editing the Makefile as it is 'tab-sensitive'.
+#Typical customization should only involve apppropriate editing of the variables in the next section.
+
+##########################Variable Settings#####################################
+###
+TRegGA_DIR        = /home/TRegGA/prj
+CHECKONLY         = yes
+NUMPROC           = SET_NUMPROC
+
+CULTIVAR          = "SET_CULTIVAR"#  Replace "SET_CULTIVAR" with an apppropriate cultivar name; e.g., "DA GANG ZHAN" (retain quotation marks)
+SYNONYM           = SET_SYNONYM#  Replace SET_SYNONYM with an appropriate space-free label; e.g., Dagangzhan (no spaces, no quotation marks)
+
+READS_DIR         = ${TRegGA_DIR}/reads/${SYNONYM}
+READS_1           = ${READS_DIR}/${SYNONYM}_1#  The quality-filtered and trimmed forward reads from Makefile_GRP step
+READS_2           = ${READS_DIR}/${SYNONYM}_2#  The quality-filtered and trimmed reverse reads from Makefile_GRP step
+
+DeNOVO_DIR        = ${TRegGA_DIR}/assembly/denovo/${SYNONYM}
+
+REFERENCE         = SET_REFERENCE
+TARGET            = SET_TARGET
+FROM              = SET_FROM
+TO                = SET_TO
+
+
+
+all:	checkonlyBegin \
+ 	${READS_1}.fa ${READS_2}.fa \
+	${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa \
+	${TRegGA_DIR}/targets/${TARGET}.embl \
+	${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/Makefile_rfguided_${SYNONYM}-on-${TARGET} \
+	checkonlyEnd
+
+
+
+### Check only begin:
+#
+checkonlyBegin:
+	if [ $(CHECKONLY) = yes ]; then \
+		if [ ! -e ${READS_DIR} ]; then \
+			mkdir ${READS_DIR}; \
+			touch ${READS_1}.fq; \
+			touch ${READS_1}.fa; \
+			touch ${READS_2}.fq; \
+			touch ${READS_2}.fa; \
+		fi; \
+		if [ ! -e ${TRegGA_DIR}/targets/${TARGET}.embl ]; then \
+			touch ${TRegGA_DIR}/targets/${TARGET}.embl; \
+		fi; \
+		if [ ! -e ${TRegGA_DIR}/targets/${TARGET}.fasta ]; then \
+			touch ${TRegGA_DIR}/targets/${TARGET}.fasta; \
+		fi; \
+		if [ ! -e ${TRegGA_DIR}/targets/${TARGET}.gff3 ]; then \
+			touch ${TRegGA_DIR}/targets/${TARGET}.gff3; \
+		fi; \
+	fi
+
+### Check only end:
+#
+checkonlyEnd:
+	if [ $(CHECKONLY) = yes ]; then \
+		if [ ! -s ${READS_1}.fq ]; then \
+			\rm -rf ${READS_DIR}; \
+		fi; \
+		if [ ! -s ${TRegGA_DIR}/targets/${TARGET}.embl ]; then \
+			\rm ${TRegGA_DIR}/targets/${TARGET}.embl; \
+			\rm ${TRegGA_DIR}/targets/${TARGET}.fasta; \
+			\rm ${TRegGA_DIR}/targets/${TARGET}.gff3; \
+		fi; \
+	fi
+
+
+### Read preparation:
+#
+${TRegGA_DIR}/reads/0Record-${SYNONYM}:	${TRegGA_DIR}/reads/0Record-template
+	cd ${TRegGA_DIR}/reads; \
+	sed 0Record-template -e 's/CHECKONLY/${CHECKONLY}/; s/SET_NUMPROC/${NUMPROC}/; s/SET_CULTIVAR/${CULTIVAR}/; s/SET_SYNONYM/${SYNONYM}/;' > 0Record-${SYNONYM}; \
+	chmod a+x 0Record-${SYNONYM}
+
+${TRegGA_DIR}/reads/${SYNONYM}/%_1.fa ${TRegGA_DIR}/reads/${SYNONYM}/%_2.fa:	${TRegGA_DIR}/reads/0Record-${SYNONYM}
+	cd ${TRegGA_DIR}/reads; \
+	0Record-${SYNONYM}; \
+	if [ $(CHECKONLY) = yes ]; then \
+		if [ ! -s ${READS_1}.fq ]; then \
+			\rm 0Record-${SYNONYM}; \
+		fi; \
+	fi
+
+
+
+### De novo assembly:
+#
+${TRegGA_DIR}/assembly/denovo/0Record-${SYNONYM}:	${TRegGA_DIR}/assembly/denovo/0Record-template
+	cd ${TRegGA_DIR}/assembly/denovo; \
+	sed 0Record-template -e 's/CHECKONLY/${CHECKONLY}/; s/SET_NUMPROC/${NUMPROC}/; s/SET_CULTIVAR/${CULTIVAR}/; s/SET_SYNONYM/${SYNONYM}/;' > 0Record-${SYNONYM}; \
+	chmod a+x 0Record-${SYNONYM}
+
+
+${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa:	${TRegGA_DIR}/assembly/denovo/0Record-${SYNONYM} ${READS_1}.fa ${READS_2}.fa
+	cd ${TRegGA_DIR}/assembly/denovo; \
+	0Record-${SYNONYM}; \
+	if [ $(CHECKONLY) = yes ]; then \
+		if [ ! -e ${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa ]; then \
+			\rm 0Record-${SYNONYM}; \
+		fi; \
+	fi
+
+
+
+### Target preparation:
+#
+${TRegGA_DIR}/targets/0Record-${TARGET}:	${TRegGA_DIR}/targets/0Record-template
+	cd ${TRegGA_DIR}/targets; \
+	sed 0Record-template -e 's/CHECKONLY/${CHECKONLY}/; s/SET_REFERENCE/${REFERENCE}/; s/SET_TARGET/${TARGET}/; s/SET_FROM/${FROM}/; s/SET_TO/${TO}/;' > 0Record-${TARGET}; \
+	chmod a+x 0Record-${TARGET}
+
+${TRegGA_DIR}/targets/${TARGET}.embl:	${TRegGA_DIR}/targets/0Record-${TARGET}
+	cd ${TRegGA_DIR}/targets; \
+	0Record-${TARGET}; \
+	if [ $(CHECKONLY) = yes ]; then \
+		if [ ! -s ${TRegGA_DIR}/targets/${TARGET}.embl ]; then \
+			\rm 0Record-${TARGET}; \
+		fi; \
+	fi
+
+
+
+### Reference-guided assembly:
+#
+${TRegGA_DIR}/assembly/rfguided/0Record-${SYNONYM}-on-${TARGET}:	${TRegGA_DIR}/assembly/rfguided/0Record-template
+	cd ${TRegGA_DIR}/assembly/rfguided; \
+	sed 0Record-template -e 's/CHECKONLY/${CHECKONLY}/; s/SET_NUMPROC/${NUMPROC}/; s/SET_SYNONYM/${SYNONYM}/; s/SET_TARGET/${TARGET}/; ' > 0Record-${SYNONYM}-on-${TARGET}; \
+	chmod a+x 0Record-${SYNONYM}-on-${TARGET}
+
+${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/Makefile_rfguided_${SYNONYM}-on-${TARGET}:	${TRegGA_DIR}/assembly/rfguided/0Record-${SYNONYM}-on-${TARGET} ${READS_1}.fa ${READS_2}.fa ${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa ${TRegGA_DIR}/targets/${TARGET}.embl
+	cd ${TRegGA_DIR}/assembly/rfguided; \
+	0Record-${SYNONYM}-on-${TARGET}; \
+	if [ $(CHECKONLY) = yes ]; then \
+		if [ ! -e ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION/0README ]; then \
+ 			\rm 0Record-${SYNONYM}-on-${TARGET}; \
+		fi; \
+	fi

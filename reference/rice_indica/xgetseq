@@ -1,0 +1,53 @@
+#1. Retrieve Oryza sativa indica (Osi) sequences from Ensembl:
+
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna.genome.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/embl/oryza_indica/Oryza_indica.ASM465v1.26.dat.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/gff3/oryza_indica/Oryza_indica.ASM465v1.26.gff3.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/cdna/Oryza_indica.ASM465v1.26.cdna.all.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/pep/Oryza_indica.ASM465v1.26.pep.all.fa.gz
+
+gunzip *.gz
+mv Oryza_indica.ASM465v1.26.dat Oryza_indica.ASM465v1.26.embl
+
+
+#2. Add the label "OsiChr" to the chromosome sequence names so that ">1" becomes ">OsiChr1", etc.:
+#
+sed -i -e "s/^>\([1-9]\)/>OsiChr\1/" Oryza_indica.ASM465v1.26.dna.genome.fa 
+
+
+#3. Create BLAST databases for the genome and protein sequences:
+#
+makeblastdb -in Oryza_indica.ASM465v1.26.dna.genome.fa -dbtype nucl -parse_seqids -out OsiDNA
+makeblastdb -in Oryza_indica.ASM465v1.26.pep.all.fa    -dbtype prot -parse_seqids -out OsiPEP
+
+#4. Extract the chromosome sequences into file OsiCHR.fa:
+#
+blastdbcmd -db OsiDNA -entry OsiChr1,OsiChr2,OsiChr3,OsiChr4,OsiChr5,OsiChr6,OsiChr7,OsiChr8,OsiChr9,OsiChr10,OsiChr11,OsiChr12 | sed "s/^>lcl|/>/;" > OsiCHR.fa
+
+#5. Retrieve the repeat-masked chromosome sequences:
+#
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.1.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.2.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.3.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.4.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.5.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.6.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.7.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.8.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.9.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.10.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.11.fa.gz
+wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.12.fa.gz
+
+gunzip *dna_rm.*fa.gz
+
+#6. Change the names to OsiRmChr* and compile into file OsiRMCHR.fa, then clean up:
+#
+cat *dna_rm.chromosome.[1-9].fa *dna_rm.chromosome.1[0-2].fa | sed -e "s/^>\([1-9]\)/>OsiRmChr\1/" > OsiRMCHR.fa
+\rm *dna_rm.chromosome.*fa
+
+#7. Extract gene coordinates from the *.gff3 file with sequence identifiers appropriate for unmasked and masked
+#   chromosome sequences (for possible use with QUAST):
+#
+sed -e "s/^\([1-9]\)/OsiChr\1/" Oryza_indica.ASM465v1.26.gff3   | egrep "^##|^OsiChr.*	gene	"         > OsiCHR.gff3
+sed -e "s/^\([1-9]\)/OsiRmChr\1/" Oryza_indica.ASM465v1.26.gff3 | egrep "^##|^OsiRmChr.*	gene	" > OsiRMCHR.gff3

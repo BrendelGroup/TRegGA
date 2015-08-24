@@ -1,0 +1,346 @@
+#Makefile_RGA-orig
+#
+#Makefile for step 3 of reference-guided assembly of rice cultivar LABEL genome.
+#
+## Reference-guided assembly of contigs and scaffolds from step 2 (RGA) 
+#
+#Version: August 14, 2015.
+
+#Usage: 
+#
+#	make -j X -f Makefile_RGA-LABEL-on-TARGET >& err
+#
+#where X is the number of processors available.
+
+#Please be careful while editing the Makefile as it is 'tab-sensitive'.
+#Typical customization should only involve apppropriate editing of the variables in the next section.
+
+##########################Variable Settings#####################################
+###
+
+SYNONYM             = LABEL#  Replace LABEL with an appropriate cultivar name; e.g. IRBB7
+TRegGA_DIR          = /home/TRegGA/prj
+
+READS_DIR           = ${TRegGA_DIR}/reads/${SYNONYM}
+READS_1             = ${READS_DIR}/${SYNONYM}_1#  The quality-filtered and trimmed forward reads from Makefile_GRP step
+READS_2             = ${READS_DIR}/${SYNONYM}_2#  The quality-filtered snd trimmed reverse reads from Makefile_GRP step
+
+DeNOVO_DIR          = ${TRegGA_DIR}/assembly/denovo/${SYNONYM}
+RGA_DIR             = ${CURDIR}
+
+# Uncomment scaffold source from one of the gapfilled SOAP scaffolds, SOAP scaffolds, user provided local source (in fasta format), or none.
+SCAFFOLDS           = ${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa# the gapfilled SOAP scaffolds
+#SCAFFOLDS           = ${DeNOVO_DIR}/${SYNONYM}-soap.scafSeq# the SOAP scaffolds
+#SCAFFOLDS           = <some_other_file>
+
+TARGET_DIR          = ${TRegGA_DIR}/targets# TARGET_SEQs are in this folder
+TARGET_SEQNAME      = GUIDESEQ# Replace GUIDESEQ with an appropriate target name; e.g. Nb58k or In58k
+TARGET_SEQ          = ${TARGET_SEQNAME}.fasta
+TARGET_EMBL         = ${TARGET_SEQNAME}.embl
+TARGET_GFF3         = ${TARGET_SEQNAME}.gff3
+
+#
+NGSUTILS            = /usr/local/src/NGS-DIR/NGSUtils/ngsutils/bin
+
+#
+ALIGNGRAPH          = /usr/local/src/NGS-DIR/AlignGraph/AlignGraph/AlignGraph
+ALIGNGRAPH_OUTPUT   = ALG
+ALIGNGRAPH_OPTIONS  = --distanceLow ${AGO-l} --distanceHigh ${AGO-h} --kMer ${AGO-k} --coverage ${AGO-c}
+#
+AGO-l               =   83#  lower bound of alignment distance between the first and second pairs of PE DNA reads. Recommended: max{insert length - 1000, single read length}.
+
+AGO-h               = 1500#  upper bound of alignment distance between the first and second pairs of PE DNA reads. Recommended: insert length + 1000.
+AGO-k               =   25#  k-mer size (default: 5).
+AGO-c               =    5#  minimum coverage to keep a path in de Bruijn graph (default: 20).
+
+#
+PAGIT_DIR           = /usr/local/src/NGS-DIR/PAGIT/PAGIT
+ABACAS_DIR          = ${PAGIT_DIR}/ABACAS
+ABACAS_OUTPUT       = ABACAS
+ABACAS_ASSEMBLY     = ${ABACAS_OUTPUT}/${SYNONYM}-ABACAS.fasta
+ABACAS_OPTIONS      = -p ${ABO-p} ${ABO-m} ${ABO-b} ${ABO-N} -i ${ABO-i} -l ${ABO-l}
+#
+ABO-p               = nucmer#  nucmer for nucleotide, promer for protein
+ABO-m               =     -m#  print ordered contigs to file in multifasta format
+ABO-b               =     -b#  print contigs in the bin file to multi-fasta file
+ABO-N               =     -N#  print a pseudomolecule without "N"s other than the default pseudomolecule ('.fasta' file) whose gaps are filled with 100 'N's between overlapping contigs.
+ABO-i               =     80#  mimimum percent identity [default 40].
+ABO-l               =    200#  minimum contig length [default 100].
+
+#
+QUAST               = /usr/local/src/NGS-DIR/QUAST/quast-2.3
+ABACAS-QUAST_REPORT = ${RGA_DIR}/${SYNONYM}-ABACAS-QUAST/report.pdf
+GF-QUAST_REPORT     = ${RGA_DIR}/${SYNONYM}-GF-QUAST/report.pdf
+QUAST_OPTIONS       = -t ${QTO-t} --${QTO-e} --${QTO-s} --${QTO-g} --${QTO-f} --min-contig ${QTO-m}
+#
+QTO-t               =                     NUMPROC#  Maximum number of threads.
+QTO-e               =                   eukaryote#  Genome is eukarytic. Affects gene finding and contig alignment. By default, the genome is assumed prokaryotic, and apply GeneMark.hmm for gene finding. If the genome is eukaryotic, add the --eukaryte option to enable GlimmerHMM instead.
+QTO-s               =                   scaffolds#  The assemblies are scaffolds (rather than contigs). QUAST will add split versions of assemblies to the comparison.
+QTO-g               =                        gage#  Starts QUAST in "GAGE mode" (see section 2.3). Note: in this case, you also have to set the -R option.
+QTO-f               =                gene-finding# Enables gene finding. Affects perfomance, thus disabled by default.
+QTO-m               =                         500# Lower threshold for a contig length
+
+#
+GAPFILLER_DIR       =  /usr/local/src/NGS-DIR/GAPFILLER/GapFiller_v1-10_linux-x86_64
+GAPFILLED_ASSEMBLY  =  ${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa
+#
+GAPFILLER_OPTIONS   =  -m ${GFO-m} -o ${GFO-o} -r ${GFO-r} -d ${GFO-d} -n ${GFO-n} -t ${GFO-t} \
+                       -i ${GFO-i} -g ${GFO-g} -T ${GFO-T} ${GFO-S}
+#
+GFO-m               =      30#  minimum overlap for gapclosing
+GFO-o               =       5#  minimum coverage for gapclosing
+GFO-r               =     0.7#  minimum base ratio for overhang bases
+GFO-d               =      50#  allowed gapclose difference
+GFO-n               =      10#  minimum overlap for merging
+GFO-t               =       5#  number of trimmed nucleotides at gap ends
+GFO-i               =       3#  maximum number of iterations; set to 0 to not run GapFiller
+GFO-g               =       1#  maximum number of gaps for bowtie mapping (bowtie -v option argument)
+GFO-T               = NUMPROC#  number of threads
+GFO-S               =       #  set to -S for a re-run without re-reading the files
+#
+# GapFiller.conf
+GFC-1               = lib001#  Name of the library. 
+GFC-2               =    bwa#  Name of the aligner, either bowtie, bwa or bwasw
+GFC-3               =  ${READS_1}.fq#  Fasta or fastq files for both ends
+GFC-4               =  ${READS_2}.fq#  Fasta or fastq files for both ends
+GFC-5               =    500#  expected/observed inserted size between paired reads
+GFC-6               =   0.25#  minimum allowed error
+GFC-7               =     FR#  orientation of the paired-reads
+
+#
+RATT_DIR            = ${PAGIT_DIR}/RATT
+RATT_OPTIONS        = ${RTO-d} ${RTO-q} ${RTO-r} ${RTO-t}
+RATT_OUTPUT         = RATT
+RATT_REPORT         = ${RATT_OUTPUT}/${RTO-r}.${RATT_QUERY_SEQNAME}.Report.txt
+RATT_QUERY_SEQNAME  = ${SYNONYM}-${TARGET_SEQNAME}
+RATT_QUERY_SEQ      = ${RATT_QUERY_SEQNAME}.fa
+RATT_QUERY_EMBL     = ${RATT_QUERY_SEQNAME}.embl
+
+#
+RTO-d               = embl# Directory name with embl-annotation files; NEEDs to be validated by the Artemis/Save as embl file.
+RTO-q               = ${RATT_QUERY_SEQ}#  A multifasta file to which the annotation will be mapped.
+RTO-r               = RATT# The prefix you wish to give to each result file
+RTO-t               = Strain#  Transfer type, one of Assembly, Strain, Species, Multiple, Free.
+
+#
+EVALUATION_DIR      = EVALUATION
+GTH_PRTDIR          = ${TRegGA_DIR}/reference/rice_japonica
+GTH_PRTDB           = OsjPRT
+
+
+###
+################################################################################
+### ! Typically there would be no need for further editing below this line ! ###
+##
+#
+##
+###
+##########################Makefile Execution####################################
+###
+##
+#
+
+##
+all:	${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG_ext.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG_rem.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG.fa \
+	${ABACAS_ASSEMBLY} ${ABACAS-QUAST_REPORT} \
+	${GAPFILLED_ASSEMBLY} ${GF-QUAST_REPORT} \
+	${RATT_REPORT} \
+	${EVALUATION_DIR}/0README ${EVALUATION_DIR}/gth.${GTH_PRTDB}-on-${TARGET_SEQNAME} \
+	${EVALUATION_DIR}/gth.${GTH_PRTDB}-on-${SYNONYM}-${TARGET_SEQNAME} \
+	${EVALUATION_DIR}/gth.summary ${EVALUATION_DIR}/blastn.out \
+	summary
+
+.PHONY:	show
+
+
+show:	
+	@echo ""
+	@echo "Show variables {for debugging; invoke with make -f Makefile_RGA-IRRB7 show}:"
+	@echo ""
+	@echo ""
+
+## 1. ALignGraph to improve the assembly of scaffolds and contigs with a closely related and well assembled genome or segment of sequence (target).
+#
+${ALIGNGRAPH_OUTPUT}/0README:	
+ifeq ("$(wildcard ./${ALIGNGRAPH_OUTPUT})","")
+	mkdir ${ALIGNGRAPH_OUTPUT}
+endif
+	@echo "This directory contains output of the AlignGraph program." > ${ALIGNGRAPH_OUTPUT}/0README
+
+# Convert the trimmed reads format from fastq to fasta
+#
+${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa:	preparedreads ${ALIGNGRAPH_OUTPUT}/0README
+	ln -s ${READS_1}.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa
+	
+${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa:	preparedreads ${ALIGNGRAPH_OUTPUT}/0README
+	ln -s ${READS_2}.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa
+
+preparedreads:
+ifeq ("$(wildcard ${READS_1}.fa)","")
+	$(error "${READS_1}.fa not found.  Please make sure that the specified reads have been prepared.")
+endif
+ifeq ("$(wildcard ${READS_2}.fa)","")
+	$(error "${READS_2}.fa not found.  Please make sure that the specified reads have been prepared.")
+endif
+ifeq ("$(wildcard ${READS_1}.fq)","")
+	$(error "${READS_1}.fq not found.  Please make sure that the specified reads have been prepared.")
+endif
+ifeq ("$(wildcard ${READS_2}.fq)","")
+	$(error "${READS_2}.fq not found.  Please make sure that the specified reads have been prepared.")
+endif
+
+
+# run AlignGraph
+#
+${ALIGNGRAPH_OUTPUT}/%-ALG_ext.fa ${ALIGNGRAPH_OUTPUT}/%-ALG_rem.fa:	preparedtarget ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa
+ifeq ("$(wildcard ${SCAFFOLDS})","")
+	$(error "Input ${SCAFFOLDS} to AlignGraph not found.  Please check.")
+endif
+	cd ${ALIGNGRAPH_OUTPUT}; \
+	${ALIGNGRAPH}/AlignGraph --read1 ${SYNONYM}_1.fa --read2 ${SYNONYM}_2.fa --contig ${SCAFFOLDS} --genome ${TARGET_DIR}/${TARGET_SEQ} ${ALIGNGRAPH_OPTIONS} --extendedContig ${SYNONYM}-ALG_ext.fa --remainingContig ${SYNONYM}-ALG_rem.fa
+
+preparedtarget:
+ifeq ("$(wildcard ${TARGET_DIR}/${TARGET_SEQ})","")
+	$(error "${TARGET_DIR}/${TARGET_SEQ} not found.")
+endif
+
+# concatenate AlignGraph-extended Contigs and AlignGraph-remaining Contigs.
+#
+${ALIGNGRAPH_OUTPUT}/%-ALG.fa:	${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG_ext.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG_rem.fa
+	cat ${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG_ext.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG_rem.fa > ${ALIGNGRAPH_OUTPUT}/$*-ALG.fa
+
+
+## 2. ABACAS to generate a pseudomolecule based on reference target sequence
+#
+${ABACAS_OUTPUT}/0README:	
+ifeq ("$(wildcard ./${ABACAS_OUTPUT})","")
+	mkdir ${ABACAS_OUTPUT}
+endif
+	@echo "This directory contains output of the ABACAS program." > ${ABACAS_OUTPUT}/0README
+
+${ABACAS_ASSEMBLY}:	${ABACAS_OUTPUT}/0README ${TARGET_DIR}/${TARGET_SEQ} ${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG.fa
+	cd ${ABACAS_OUTPUT}; \
+	perl ${ABACAS_DIR}/abacas.pl -r ${TARGET_DIR}/${TARGET_SEQ} -q ../${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG.fa ${ABACAS_OPTIONS} -o ${SYNONYM}-ABACAS
+
+## 3. ABACAS-QUAST
+${ABACAS-QUAST_REPORT}:	${ABACAS_ASSEMBLY} ${TARGET_DIR}/${TARGET_SEQ}
+	python ${QUAST}/quast.py ${ABACAS_ASSEMBLY} -o ${SYNONYM}-ABACAS-QUAST -R ${TARGET_DIR}/${TARGET_SEQ} -G ${TARGET_DIR}/${TARGET_GFF3} ${QUAST_OPTIONS}
+
+## 4. GapFiller to fill the gaps in ${SYNONYM}-ABACAS.fasta  using PE reads
+#
+GapFiller.conf:		preparedreads
+	@echo "${GFC-1} ${GFC-2} ${GFC-3} ${GFC-4} ${GFC-5} ${GFC-6} ${GFC-7}" > GapFiller.conf
+
+${GAPFILLED_ASSEMBLY}:	GapFiller.conf ${ABACAS_ASSEMBLY}
+	perl ${GAPFILLER_DIR}/GapFiller.pl -l GapFiller.conf -s ${ABACAS_ASSEMBLY} -b ${SYNONYM}-GF ${GAPFILLER_OPTIONS}
+
+## 5. RATT to transfer the annotation from reference genome to the new assembly using RATT (Rapid Annotation Transfer Tool) from PAGIT
+# make embl directory and copy the embl annotation file to here.
+#
+${RATT_OUTPUT}/0README:	
+ifeq ("$(wildcard ./${RATT_OUTPUT})","")
+	mkdir ${RATT_OUTPUT}
+endif
+	@echo "This directory contains output of the RATT program." > ${RATT_OUTPUT}/0README
+
+${RATT_OUTPUT}/${RTO-d}/${TARGET_EMBL}:	${RATT_OUTPUT}/0README
+ifeq ("$(wildcard ${RATT_OUTPUT}/${RTO-d})","")
+	mkdir ${RATT_OUTPUT}/${RTO-d}
+endif
+	\cp ${TARGET_DIR}/${TARGET_EMBL} ${RATT_OUTPUT}/${RTO-d}
+
+# set up query
+#
+${RATT_OUTPUT}/${RATT_QUERY_SEQ}:	${GAPFILLED_ASSEMBLY} ${RATT_OUTPUT}/0README
+	sed 's/^>.*/>${RATT_QUERY_SEQNAME}/' ${GAPFILLED_ASSEMBLY} > ${RATT_OUTPUT}/${RATT_QUERY_SEQ}
+
+# Run RATT
+#
+${RATT_REPORT}:	${RATT_OUTPUT}/0README ${RATT_OUTPUT}/${RTO-d}/${TARGET_EMBL} ${RATT_OUTPUT}/${RATT_QUERY_SEQ}
+	cd ${RATT_OUTPUT}; \
+	${RATT_DIR}/start.ratt.sh ${RATT_OPTIONS}
+
+## 6. GF-QUAST
+#
+${GF-QUAST_REPORT}: ${GAPFILLED_ASSEMBLY} ${TARGET_DIR}/${TARGET_SEQ}
+	python ${QUAST}/quast.py ${GAPFILLED_ASSEMBLY} -o ${SYNONYM}-GF-QUAST -R ${TARGET_DIR}/${TARGET_SEQ} -G ${TARGET_DIR}/${TARGET_GFF3} ${QUAST_OPTIONS}
+
+
+## 5. Evaluation
+#
+${EVALUATION_DIR}/0README:	${RATT_REPORT}
+ifeq ("$(wildcard ./${EVALUATION_DIR})","")
+	mkdir ${EVALUATION_DIR}
+endif
+	@echo "This directory contains final results and evaluations of the workflow." > ${EVALUATION_DIR}/0README
+	cp ${RATT_OUTPUT}/${SYNONYM}-${TARGET_SEQNAME}.fa ${EVALUATION_DIR}/
+	cp ${RATT_OUTPUT}/${RTO-r}.${SYNONYM}-${TARGET_SEQNAME}.final.embl ${EVALUATION_DIR}/${SYNONYM}-${TARGET_SEQNAME}.embl
+	cp ${RATT_OUTPUT}/${RTO-r}.${SYNONYM}-${TARGET_SEQNAME}.Report.gff ${EVALUATION_DIR}/${SYNONYM}-${TARGET_SEQNAME}.gff3
+	cp ${TARGET_DIR}/${TARGET_SEQ} ${EVALUATION_DIR}/
+	cp ${RATT_OUTPUT}/${RTO-d}/${TARGET_SEQNAME}.embl ${EVALUATION_DIR}/
+	cp ${RATT_OUTPUT}/nucmer.${RTO-r}.snp ${EVALUATION_DIR}/${SYNONYM}-${TARGET_SEQNAME}.snp
+
+${EVALUATION_DIR}/gth.${GTH_PRTDB}-on-${TARGET_SEQNAME}:	${EVALUATION_DIR}/0README
+	cd ${EVALUATION_DIR}; \
+	gth -genomic ${TARGET_SEQ} -protein ${GTH_PRTDIR}/${GTH_PRTDB} > gth.${GTH_PRTDB}-on-${TARGET_SEQNAME}
+
+${EVALUATION_DIR}/gth.${GTH_PRTDB}-on-${SYNONYM}-${TARGET_SEQNAME}:	${EVALUATION_DIR}/0README
+	cd ${EVALUATION_DIR}; \
+	gth -genomic ${SYNONYM}-${TARGET_SEQNAME}.fa -protein ${GTH_PRTDIR}/${GTH_PRTDB} > gth.${GTH_PRTDB}-on-${SYNONYM}-${TARGET_SEQNAME}
+
+${EVALUATION_DIR}/gth.summary:	${EVALUATION_DIR}/gth.${GTH_PRTDB}-on-${TARGET_SEQNAME} ${EVALUATION_DIR}/gth.${GTH_PRTDB}-on-${SYNONYM}-${TARGET_SEQNAME}
+	cd ${EVALUATION_DIR}; \
+	echo "CDS annotated in ${TARGET_SEQNAME}.embl:" > gth.summary; \
+	echo "" >> gth.summary; \
+	egrep "CDS" ${TARGET_SEQNAME}.embl >> gth.summary; \
+	echo "" >> gth.summary; \
+	echo "CDS transferred to ${SYNONYM}-${TARGET_SEQNAME}.embl:" >> gth.summary; \
+	echo "" >> gth.summary; \
+	egrep "CDS" ${SYNONYM}-${TARGET_SEQNAME}.embl >> gth.summary; \
+	echo "" >> gth.summary; \
+	echo "PGS annotated in gth.${GTH_PRTDB}-on-${TARGET_SEQNAME} (might contain partial matches):" >> gth.summary; \
+	echo "" >> gth.summary; \
+	egrep "^  PGS" gth.${GTH_PRTDB}-on-${TARGET_SEQNAME} >> gth.summary; \
+	echo "" >> gth.summary; \
+	echo "PGS annotated in gth.${GTH_PRTDB}-on-${SYNONYM}-${TARGET_SEQNAME}" >> gth.summary; \
+	echo "(might contain partial matches and matches outside the target-transferred gene models):" >> gth.summary; \
+	echo "" >> gth.summary; \
+	egrep "^  PGS" gth.${GTH_PRTDB}-on-${SYNONYM}-${TARGET_SEQNAME} >> gth.summary; \
+	echo "" >> gth.summary
+
+${EVALUATION_DIR}/blastn.out:	${EVALUATION_DIR}/0README
+	cd ${EVALUATION_DIR}; \
+	makeblastdb -in ${TARGET_SEQNAME}.fasta -dbtype nucl -out TRGT -parse_seqids; \
+	blastn -db TRGT -query ${SYNONYM}-${TARGET_SEQNAME}.fa -outfmt 6 > blastn.out
+
+summary:	${EVALUATION_DIR}/0README
+	@echo ""
+	@echo ""
+	@echo "Looks like everything is finished.  Please check the error logs to make"
+	@echo "sure that all programs ran correctly."
+	@echo ""
+	@echo "Final results are shown in directory ${EVALUATION_DIR}.  The file gth.summary"
+	@echo "shows original and transfered gene annotations as well as ${GTH_PRTDB} protein"
+	@echo "spliced alignment gth-predicted gene models."
+	@echo ""
+	@echo "Content of directory ${EVALUATION_DIR}:"
+	@echo ""
+	@ls -RC ${EVALUATION_DIR}
+	@echo ""
+	@echo "Now showing gth.summary:"
+	@echo ""
+	@more ${EVALUATION_DIR}/gth.summary
+	@echo ""
+	@echo "To visually examine the reference-guided assembly relative to the target sequence,"
+	@echo "you could run:"
+	@echo ""
+	@echo "cd ${EVALUATION_DIR}; act ${TARGET_SEQNAME}.embl blastn.out ${SYNONYM}-${TARGET_SEQNAME}.embl"
+	@echo ""
+	@echo "To clean up unnecessary files, run"
+	@echo ""
+	@echo "make -f <Makefile> cleanup"
+	@echo ""
+
+##
+cleanup:	${ALIGNGRAPH_OUTPUT}
+	-\rm -rf ${ALIGNGRAPH_OUTPUT}/tmp
