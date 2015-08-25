@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+#0. Check for software prerequisites:
+which makeblastdb
+which gt
+which blastdbcmd
+
 #1. Retrieve Oryza sativa japonica (Osj) sequences from Ensembl:
 
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna.genome.fa.gz
@@ -6,7 +14,7 @@ wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/gff3/oryza_sativa/Oryza_
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/cdna/Oryza_sativa.IRGSP-1.0.26.cdna.all.fa.gz
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/pep/Oryza_sativa.IRGSP-1.0.26.pep.all.fa.gz
 
-gunzip *.gz
+gunzip -f *.gz
 mv Oryza_sativa.IRGSP-1.0.26.dat Oryza_sativa.IRGSP-1.0.26.embl
 
 
@@ -43,7 +51,7 @@ wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/O
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.11.fa.gz
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.12.fa.gz
 
-gunzip *dna_rm.*fa.gz
+gunzip -f *dna_rm.*fa.gz
 
 #7. Change the names to OsjRmChr* and compile into file OsjRMCHR.fa, then clean up:
 #
@@ -55,3 +63,7 @@ cat *dna_rm.chromosome.[1-9].fa *dna_rm.chromosome.1[0-2].fa | sed -e "s/^>\([1-
 #
 sed -e "s/^\([1-9]\)/OsjChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3   | egrep "^##|^OsjChr.*	gene	"         > OsjCHR.gff3
 sed -e "s/^\([1-9]\)/OsjRmChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3 | egrep "^##|^OsjRmChr.*	gene	" > OsjRMCHR.gff3
+
+#8. Verify the files have been downloaded and processed correctly.
+#
+shasum -c checksums.sha
