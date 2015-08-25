@@ -1,0 +1,17 @@
+cd targets/
+./xentret
+cd ..
+
+cd reference/rice_indica/
+./xgetseq
+cd ..
+
+cd reference/rice_japonica/
+./xgetseq
+cd ..
+
+
+cd reads/
+gunzip -f -k rice_line_metadata_20140521.tsv.gz \
+             reads/seq_file_mapping_to_SRA.txt.gz
+cd ..

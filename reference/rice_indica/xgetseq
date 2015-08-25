@@ -1,3 +1,10 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+#0. Check for software prerequisites:
+which makeblastdb
+which blastdbcmd
+
 #1. Retrieve Oryza sativa indica (Osi) sequences from Ensembl:
 
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna.genome.fa.gz
@@ -6,7 +13,7 @@ wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/gff3/oryza_indica/Oryza_
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/cdna/Oryza_indica.ASM465v1.26.cdna.all.fa.gz
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/pep/Oryza_indica.ASM465v1.26.pep.all.fa.gz
 
-gunzip *.gz
+gunzip -f *.gz
 mv Oryza_indica.ASM465v1.26.dat Oryza_indica.ASM465v1.26.embl
 
 
@@ -39,7 +46,7 @@ wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/O
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.11.fa.gz
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_indica/dna/Oryza_indica.ASM465v1.26.dna_rm.chromosome.12.fa.gz
 
-gunzip *dna_rm.*fa.gz
+gunzip -f *dna_rm.*fa.gz
 
 #6. Change the names to OsiRmChr* and compile into file OsiRMCHR.fa, then clean up:
 #
@@ -51,3 +58,7 @@ cat *dna_rm.chromosome.[1-9].fa *dna_rm.chromosome.1[0-2].fa | sed -e "s/^>\([1-
 #
 sed -e "s/^\([1-9]\)/OsiChr\1/" Oryza_indica.ASM465v1.26.gff3   | egrep "^##|^OsiChr.*	gene	"         > OsiCHR.gff3
 sed -e "s/^\([1-9]\)/OsiRmChr\1/" Oryza_indica.ASM465v1.26.gff3 | egrep "^##|^OsiRmChr.*	gene	" > OsiRMCHR.gff3
+
+#8. Verify the files have been downloaded and processed correctly.
+#
+shasum -c checksums.sha
