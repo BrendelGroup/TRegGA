@@ -5,6 +5,7 @@
 # de novo assembly of reads
 #
 #Version: August 14, 2015.
+include ../../TRegGA.config
 
 #Usage: 
 #
@@ -23,7 +24,6 @@
 ###
 
 SYNONYM            =  LABEL#  Replace LABEL with an appropriate cultivar name
-TRegGA_DIR         =  /scratch/TRegGA/prj
 denovo_DIR         =  ${TRegGA_DIR}/assembly/denovo/${SYNONYM}
 
 READS_DIR          =  ${TRegGA_DIR}/reads/${SYNONYM}
