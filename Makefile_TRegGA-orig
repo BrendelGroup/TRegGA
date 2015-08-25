@@ -3,7 +3,7 @@
 #Makefile to run all TRegGA workflow components with one command ...
 #
 #Version: August 21, 2015.
-
+include TRegGA.config
 
 #Usage:
 #
@@ -20,7 +20,6 @@
 
 ##########################Variable Settings#####################################
 ###
-TRegGA_DIR        = /home/TRegGA/prj
 CHECKONLY         = yes
 NUMPROC           = SET_NUMPROC
 

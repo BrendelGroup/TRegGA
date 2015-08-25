@@ -5,6 +5,7 @@
 ## Reference-guided assembly of contigs and scaffolds from step 2 (RGA) 
 #
 #Version: August 14, 2015.
+include ../../TRegGA.config
 
 #Usage: 
 #
@@ -19,7 +20,6 @@
 ###
 
 SYNONYM             = LABEL#  Replace LABEL with an appropriate cultivar name; e.g. IRBB7
-TRegGA_DIR          = /home/TRegGA/prj
 
 READS_DIR           = ${TRegGA_DIR}/reads/${SYNONYM}
 READS_1             = ${READS_DIR}/${SYNONYM}_1#  The quality-filtered and trimmed forward reads from Makefile_GRP step

@@ -5,7 +5,7 @@
 #  Get and Prepare Reads (GPR)
 #
 #Version: August 23, 2015.
-
+include ../TRegGA.config
 
 #Usage:
 #
@@ -22,8 +22,6 @@
 
 ##########################Variable Settings#####################################
 ###
-TRegGA_DIR        = /home/TRegGA/prj
-
 # Uncomment one of the following SOURCE specifications and edit the appropriate section in
 # the following if-block.  These lines specify the source of the read data.  Three options
 # are provided: download from the EBI Short Read Archive; download from the NCBI Short Read
