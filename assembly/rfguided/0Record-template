@@ -1,0 +1,28 @@
+#!/bin/sh
+
+CHECKME=CHECKONLY
+NUMPROC=SET_NUMPROC
+SYNONYM=SET_SYNONYM
+TARGET=SET_TARGET
+
+if [ $CHECKME = yes ]; then
+	echo ""
+	sed Makefile_RGA-orig -e "s/^SYNONYM             = LABEL/SYNONYM             = $SYNONYM/; s/^TARGET_SEQNAME      = GUIDESEQ/TARGET_SEQNAME      = $TARGET/; s/^QTO-t               =                     NUMPROC/QTO-t               =                          $NUMPROC/; s/^GFO-T               = NUMPROC/GFO-T               = $NUMPROC/" > tmpMakefile_RGA_$SYNONYM-on-$TARGET
+	echo ""
+	echo "Now showing output of:   make -n -j 2 -f tmpMakefile_RGA_$SYNONYM-on-$TARGET"
+	echo ""
+	make -n -j 2 -f tmpMakefile_RGA_$SYNONYM-on-$TARGET
+	echo ""
+	\rm tmpMakefile_RGA_$SYNONYM-on-$TARGET
+else
+	mkdir $SYNONYM-on-$TARGET
+	echo ""
+	sed Makefile_RGA-orig -e "s/^SYNONYM             = LABEL/SYNONYM             = $SYNONYM/; s/^TARGET_SEQNAME      = GUIDESEQ/TARGET_SEQNAME      = $TARGET/; s/^QTO-t               =                     NUMPROC/QTO-t               =                          $NUMPROC/; s/^GFO-T               = NUMPROC/GFO-T               = $NUMPROC/" > $SYNONYM-on-$TARGET/Makefile_RGA_$SYNONYM-on-$TARGET
+	echo ""
+	cd $SYNONYM-on-$TARGET
+	echo ""
+	echo "NOW:	make -j 2 -f Makefile_RGA_$SYNONYM-on-$TARGET >& err"
+  	make -j 2 -f Makefile_RGA_$SYNONYM-on-$TARGET >& err
+	echo ""
+fi
+#make -f Makefile_RGA_Dagangzhan cleanup
