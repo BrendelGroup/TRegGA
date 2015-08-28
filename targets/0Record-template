@@ -1,0 +1,27 @@
+#!/bin/sh
+
+CHECKME=CHECKONLY
+REFERENCE=SET_REFERENCE
+TARGET=SET_TARGET
+FROM=SET_FROM
+TO=SET_TO
+
+if [ $CHECKME = yes ]; then
+	echo "You elected to prepare target $TARGET from reference $REFERENCE, range $FROM - $TO,"
+	echo " as reflected in the following script to be run:"
+	echo ""
+	more 0Record-$TARGET
+	echo ""
+else
+	python getTarget.py $REFERENCE.embl $TARGET $FROM $TO
+	rname=`head -1 $TARGET.embl | cut -d" " -f4 | cut -d";" -f1`
+	echo $rname
+	sed -i -e "s/$rname/$TARGET/g;" $TARGET.embl
+	sed -i -e "s/$rname/$TARGET/g;" $TARGET.fasta
+	seqret -sequence $TARGET.embl -snucleotide T -sformat1 embl -feature -outseq $TARGET.gff3 -osformat2 gff3
+	echo ""
+	echo "The following files have been prepared for the reference-guided assembly:"
+	echo ""
+	ls $TARGET.*
+	echo ""
+fi
