@@ -303,7 +303,7 @@ Original code saved as libs/gage.pyORIG.
 	python metaquast.py --test
 ```
 
-### SAMTOOLS
+### Samtools
 
 See http://www.htslib.org.
 Last update: December 3, 2015.
@@ -331,7 +331,7 @@ chmod a+x *mer
 cp *mer $TRG_ROOT/local/bin/
 ```
 
-### SRATOOLKIT
+### SRAToolkit
 
 See http://www.ncbi.nlm.nih.gov/books/NBK158900.
 Last update: July 5, 2015.
@@ -343,7 +343,7 @@ tar -xzf sratoolkit.2.5.2-centos_linux64.tar.gz
 cp sratoolkit.2.5.2-centos_linux64/bin/* $TRG_ROOT/local/bin/
 ```
 
-### TRIMMOMATIC
+### Trimmomatic
 
 See http://www.usadellab.org/cms/index.php?page=trimmomatic.
 Last update: July 5, 2015.
