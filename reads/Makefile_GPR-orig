@@ -4,8 +4,8 @@
 #
 #  Get and Prepare Reads (GPR)
 #
-#Version: August 23, 2015.
-include ../TRegGA.config
+#Version: September 20, 2015.
+include TRegGA.config
 
 #Usage:
 #
@@ -34,12 +34,12 @@ SOURCE            = ebisra
 ifeq ($(SOURCE), ebisra)
 	SAMPLE            = ERR626#  First six characters of ACCESSIONS; here, example label for IRBB7
 	SYNONYM           = LABEL#  Replace LABEL with an appropriate cultivar name; here IRBB7
-	SRAFTPSITE        = ftp://ftp.sra.ebi.ac.uk/vol1/fastq/${SAMPLE}
+	SRAFTPSITE        = ftp://ftp.sra.ebi.ac.uk/vol1/fastq/$(SAMPLE)
 	ACCESSIONS        = ERR626157 ERR626158#  IRBB7, example set of reads
 else ifeq ($(SOURCE), ncbisra)
-	SAMPLE            = SRR933669#  NCBI identifier; here, reads for rice cultivar 93-11
+	SAMPLE            = SRR933#  NCBI identifier; here, reads for rice cultivar 93-11
 	SYNONYM           = LABEL#  Replace LABEL with an appropriate cultivar name; here 93-11
-	SRAFTPSITE        = "ftp://ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR933/$(SAMPLE)"
+	SRAFTPSITE        = "ftp://ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/$(SAMPLE)/$(ACCESSIONS)"
 	ACCESSIONS        = SRR933669
 else
 	SAMPLE            = DEMO-LOCAL#  label used below to identify the location of the read files
@@ -55,17 +55,17 @@ READ2FILES       := ${ACCESSIONS:%=%_2.fastq.gz}
 ###
 # Specify program locations and options:
 #
-SRATOOLKIT        = /usr/local/src/NGS-DIR/SRATOOLKIT/sratoolkit.2.5.2-centos_linux64/bin
+# SRATOOLKIT
 
-
-FASTQC            = /usr/local/src/NGS-DIR/FASTQC/FastQC
+#
+# FASTQC
 FASTQC_OPTIONS    = --threads ${FQO-t}
 #
 FQO-t      =        2#  number of files which can be processed simultaneously.
 
-
-TRIMMOMATIC       =  /usr/local/src/NGS-DIR/TRIMMOMATIC/Trimmomatic-0.33/trimmomatic-0.33.jar
-ADAPTORS          =  /usr/local/src/NGS-DIR/TRIMMOMATIC/Trimmomatic-0.33/adapters
+#
+# TRIMMOMATIC
+# ADAPTORS
 #
 # TRIMMOMATIC options are explained in detail at http://www.usadellab.org/cms/index.php?page=trimmomatic
 #  and the linked manual.
@@ -74,7 +74,7 @@ ADAPTORS          =  /usr/local/src/NGS-DIR/TRIMMOMATIC/Trimmomatic-0.33/adapter
 #
 TRIMMOMATIC_STEPS =  ${ILLUMINACLIP} ${LEADING} ${SLIDINGWINDOW} ${TRAILING} ${MINLEN} 
 #ILLUMINACLIP      = ILLUMINACLIP:${TMO-a}:${TMO-i}#   Cut adapter and other illumina-specific sequences from the read.
-ILLUMINACLIP      = #                                  Option left blank; apporpriate for 3K RGP data, that are available from
+ILLUMINACLIP      = #                                  Option left blank; appropriate for 3K RGP data, that are available from
 #                                                       the SRA site with adapters trimmed already.
 LEADING           = LEADING:${TMO-m}#                  Cut bases off the start of a read, if below a threshold quality.
 SLIDINGWINDOW     = SLIDINGWINDOW:${TMO-w}:${TMO-m}#   Performs a sliding window trimming approach. It starts scanning
@@ -94,7 +94,7 @@ TMO-m      =                         20#   minimum quality required to keep a ba
 TMO-l      =                         40#   minimum length of reads to be kept
 
 #
-NGSUTILS            = /usr/local/src/NGS-DIR/NGSUtils/ngsutils/bin
+# NGSUTILS
 
 ################################################################################
 ### ! Typically there would be no need for further editing below this line ! ###
@@ -143,8 +143,8 @@ getseqs:	${READ1FILES} ${READ2FILES}
 		wget ${SRAFTPSITE}/$*/$*_1.fastq.gz; \
 		wget ${SRAFTPSITE}/$*/$*_2.fastq.gz; \
 	elif [ $(SOURCE) = "ncbisra" ]; then \
-		wget $(SRAFTPSITE)/$(SAMPLE).sra; \
-		$(SRATOOLKIT)/fastq-dump --gzip --split-files $(SAMPLE).sra; \
+		wget $(SRAFTPSITE)/$(ACCESSIONS).sra; \
+		$(SRATOOLKIT)/fastq-dump --gzip --split-files $(ACCESSIONS).sra; \
 	else \
 		ln -s ${FASTQDIR}/$*_1.fastq.gz $*_1.fastq.gz; \
 		ln -s ${FASTQDIR}/$*_2.fastq.gz $*_2.fastq.gz; \

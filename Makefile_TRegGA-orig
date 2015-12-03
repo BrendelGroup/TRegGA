@@ -2,7 +2,7 @@
 #
 #Makefile to run all TRegGA workflow components with one command ...
 #
-#Version: August 21, 2015.
+#Version: September 20, 2015.
 include TRegGA.config
 
 #Usage:
@@ -68,6 +68,7 @@ checkonlyBegin:
 		if [ ! -e ${TRegGA_DIR}/targets/${TARGET}.gff3 ]; then \
 			touch ${TRegGA_DIR}/targets/${TARGET}.gff3; \
 		fi; \
+		sleep 1; \
 	fi
 
 ### Check only end:
@@ -94,7 +95,7 @@ ${TRegGA_DIR}/reads/0Record-${SYNONYM}:	${TRegGA_DIR}/reads/0Record-template
 
 ${TRegGA_DIR}/reads/${SYNONYM}/%_1.fa ${TRegGA_DIR}/reads/${SYNONYM}/%_2.fa:	${TRegGA_DIR}/reads/0Record-${SYNONYM}
 	cd ${TRegGA_DIR}/reads; \
-	0Record-${SYNONYM}; \
+	./0Record-${SYNONYM}; \
 	if [ $(CHECKONLY) = yes ]; then \
 		if [ ! -s ${READS_1}.fq ]; then \
 			\rm 0Record-${SYNONYM}; \
@@ -113,7 +114,7 @@ ${TRegGA_DIR}/assembly/denovo/0Record-${SYNONYM}:	${TRegGA_DIR}/assembly/denovo/
 
 ${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa:	${TRegGA_DIR}/assembly/denovo/0Record-${SYNONYM} ${READS_1}.fa ${READS_2}.fa
 	cd ${TRegGA_DIR}/assembly/denovo; \
-	0Record-${SYNONYM}; \
+	./0Record-${SYNONYM}; \
 	if [ $(CHECKONLY) = yes ]; then \
 		if [ ! -e ${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa ]; then \
 			\rm 0Record-${SYNONYM}; \
@@ -131,7 +132,7 @@ ${TRegGA_DIR}/targets/0Record-${TARGET}:	${TRegGA_DIR}/targets/0Record-template
 
 ${TRegGA_DIR}/targets/${TARGET}.embl:	${TRegGA_DIR}/targets/0Record-${TARGET}
 	cd ${TRegGA_DIR}/targets; \
-	0Record-${TARGET}; \
+	./0Record-${TARGET}; \
 	if [ $(CHECKONLY) = yes ]; then \
 		if [ ! -s ${TRegGA_DIR}/targets/${TARGET}.embl ]; then \
 			\rm 0Record-${TARGET}; \
@@ -149,7 +150,7 @@ ${TRegGA_DIR}/assembly/rfguided/0Record-${SYNONYM}-on-${TARGET}:	${TRegGA_DIR}/a
 
 ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/Makefile_rfguided_${SYNONYM}-on-${TARGET}:	${TRegGA_DIR}/assembly/rfguided/0Record-${SYNONYM}-on-${TARGET} ${READS_1}.fa ${READS_2}.fa ${DeNOVO_DIR}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa ${TRegGA_DIR}/targets/${TARGET}.embl
 	cd ${TRegGA_DIR}/assembly/rfguided; \
-	0Record-${SYNONYM}-on-${TARGET}; \
+	./0Record-${SYNONYM}-on-${TARGET}; \
 	if [ $(CHECKONLY) = yes ]; then \
 		if [ ! -e ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION/0README ]; then \
  			\rm 0Record-${SYNONYM}-on-${TARGET}; \

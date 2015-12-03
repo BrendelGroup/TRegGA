@@ -40,17 +40,17 @@ echo "Sample (sample_alias) name:	$sample"
 echo ""
 echo "First entry in file seq_file_mapping_to_SRA.txt:"
 echo ""
-egrep "$sample" *txt | head -1
+zgrep "$sample" *txt.gz | head -1
 echo ""
 
 if [ $verbose -eq 1 ]; then
   echo "Commands to retrieve all read data files:"
   echo ""
-  egrep "$sample" *txt | cut -d"	" -f12 | sed -e "s/ftp/wget ftp/;" -e "s/_1fastq.gz/_1.fastq.gz;/;" -e "s/_2fastq.gz/_2.fastq.gz;/;"
+  zgrep "$sample" *txt.gz | cut -d"	" -f12 | sed -e "s/ftp/wget ftp/;" -e "s/_1fastq.gz/_1.fastq.gz;/;" -e "s/_2fastq.gz/_2.fastq.gz;/;"
 fi
 
-msample=`egrep "$sample" *txt | cut -d"	" -f12 | cut -d"/" -f6 | sort -u`
-maccessions=`egrep "$sample" *txt | cut -d"	" -f12 | cut -d"/" -f7 | sort -u | tr '\n' ' '`
+msample=`zgrep "$sample" *txt.gz | cut -d"	" -f12 | cut -d"/" -f6 | sort -u`
+maccessions=`zgrep "$sample" *txt.gz | cut -d"	" -f12 | cut -d"/" -f7 | sort -u | tr '\n' ' '`
 
 if [ $verbose -eq 1 ]; then
   echo ""

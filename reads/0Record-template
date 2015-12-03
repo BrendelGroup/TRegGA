@@ -8,28 +8,28 @@ SYNONYM=SET_SYNONYM
 if [ $CHECKME = yes ]; then
 	echo "Now showing output of:   xgetreads $CULTIVAR $SYNONYM"
 	echo ""
-	xgetreads "$CULTIVAR" $SYNONYM | more
-	xgetreads "$CULTIVAR" $SYNONYM | tail -n 4 > insertme
-	sed /scratch/TRegGA/prj/reads/Makefile_GPR-orig -e "0,/else ifeq (\$(SOURCE), ncbisra)/ {/SAMPLE/,+3d}" -e "/ifeq (\$(SOURCE), ebisra)/r insertme" > tmpMakefile_GPR_$SYNONYM
+	./xgetreads "$CULTIVAR" $SYNONYM | more
+	./xgetreads "$CULTIVAR" $SYNONYM | tail -n 4 > insertme
+	sed Makefile_GPR-orig -e "0,/else ifeq (\$(SOURCE), ncbisra)/ {/SAMPLE/,+3d}" -e "/ifeq (\$(SOURCE), ebisra)/r insertme" > tmpMakefile_GPR_$SYNONYM
 	\rm insertme
 	echo ""
 	echo ""
-	echo "Now showing output of:   make -n -j $NUMPROC -f tmpMakefile_GPR_$SYNONYM"
+	echo "Now showing output of:   make -n -j $NUMPROC -I../ -I../../ -f tmpMakefile_GPR_$SYNONYM"
 	echo ""
-	make -n -j $NUMPROC -f tmpMakefile_GPR_$SYNONYM
+	make -n -j $NUMPROC -I../ -I../../ -f tmpMakefile_GPR_$SYNONYM
 	echo ""
 	\rm tmpMakefile_GPR_$SYNONYM
 else
 	mkdir $SYNONYM
 	echo ""
-	xgetreads "$CULTIVAR" $SYNONYM terse | tail -n 4 > insertme
-	sed /scratch/TRegGA/prj/reads/Makefile_GPR-orig -e "0,/else ifeq (\$(SOURCE), ncbisra)/ {/SAMPLE/,+3d}" -e "/ifeq (\$(SOURCE), ebisra)/r insertme" > $SYNONYM/Makefile_GPR_$SYNONYM
+	./xgetreads "$CULTIVAR" $SYNONYM terse | tail -n 4 > insertme
+	sed Makefile_GPR-orig -e "0,/else ifeq (\$(SOURCE), ncbisra)/ {/SAMPLE/,+3d}" -e "/ifeq (\$(SOURCE), ebisra)/r insertme" > $SYNONYM/Makefile_GPR_$SYNONYM
 	\rm insertme
 	echo ""
 	cd $SYNONYM
 	echo ""
-	echo "NOW:	make -j $NUMPROC -f Makefile_GPR_$SYNONYM >& err"
- 	make -j $NUMPROC -f Makefile_GPR_$SYNONYM >& err
+	echo "NOW:	make -j $NUMPROC -I../ -I../../ -f Makefile_GPR_$SYNONYM >& err"
+	make -j $NUMPROC -I../ -I../../ -f Makefile_GPR_$SYNONYM >& err
 	echo ""
 fi
 #make -f Makefile_GPR_Dagangzhan cleanup
