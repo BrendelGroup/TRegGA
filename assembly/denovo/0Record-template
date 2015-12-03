@@ -9,9 +9,9 @@ if [ $CHECKME = yes ]; then
 	echo ""
 	sed Makefile_denovo-orig -e "s/^SYNONYM            =  LABEL/SYNONYM            =  $SYNONYM/; s/^KGO-t     = NUMPROC/KGO-t     = $NUMPROC/; s/^SPO-p      = NUMPROC/SPO-p      = $NUMPROC/; s/^QTO-t =     NUMPROC/QTO-t =     $NUMPROC/; s/^GFO-T     = NUMPROC/GFO-T     = $NUMPROC/" > tmpMakefile_denovo_$SYNONYM
 	echo ""
-	echo "Now showing output of:   make -n -j 2 -f tmpMakefile_denovo_$SYNONYM"
+	echo "Now showing output of:   make -n -j 2 -I../ -I../../ -I../../../ -f tmpMakefile_denovo_$SYNONYM"
 	echo ""
-	make -n -j 2 -f tmpMakefile_denovo_$SYNONYM
+	make -n -j 2 -I../ -I../../ -I../../../ -f tmpMakefile_denovo_$SYNONYM
 	echo ""
 	\rm tmpMakefile_denovo_$SYNONYM
 else
@@ -21,8 +21,8 @@ else
 	echo ""
 	cd $SYNONYM
 	echo ""
-	echo "NOW:	make -j 2 -f Makefile_denovo_$SYNONYM >& err"
-  	make -j 2 -f Makefile_denovo_$SYNONYM >& err
+	echo "NOW:	make -j 2 -I../ -I../../ -I../../../ -f Makefile_denovo_$SYNONYM >& err"
+	make -j 2 -I../ -I../../ -I../../../ -f Makefile_denovo_$SYNONYM >& err
 	echo ""
 fi
 #make -f Makefile_denovo_Dagangzhan cleanup

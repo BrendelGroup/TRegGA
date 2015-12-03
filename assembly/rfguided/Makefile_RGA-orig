@@ -4,8 +4,9 @@
 #
 ## Reference-guided assembly of contigs and scaffolds from step 2 (RGA) 
 #
-#Version: August 14, 2015.
-include ../../TRegGA.config
+#Version: September 22, 2015.
+
+include TRegGA.config
 
 #Usage: 
 #
@@ -40,10 +41,10 @@ TARGET_EMBL         = ${TARGET_SEQNAME}.embl
 TARGET_GFF3         = ${TARGET_SEQNAME}.gff3
 
 #
-NGSUTILS            = /usr/local/src/NGS-DIR/NGSUtils/ngsutils/bin
+# NGSUTILS
 
 #
-ALIGNGRAPH          = /usr/local/src/NGS-DIR/AlignGraph/AlignGraph/AlignGraph
+# ALIGNGRAPH
 ALIGNGRAPH_OUTPUT   = ALG
 ALIGNGRAPH_OPTIONS  = --distanceLow ${AGO-l} --distanceHigh ${AGO-h} --kMer ${AGO-k} --coverage ${AGO-c}
 #
@@ -54,7 +55,7 @@ AGO-k               =   25#  k-mer size (default: 5).
 AGO-c               =    5#  minimum coverage to keep a path in de Bruijn graph (default: 20).
 
 #
-PAGIT_DIR           = /usr/local/src/NGS-DIR/PAGIT/PAGIT
+# PAGIT
 ABACAS_DIR          = ${PAGIT_DIR}/ABACAS
 ABACAS_OUTPUT       = ABACAS
 ABACAS_ASSEMBLY     = ${ABACAS_OUTPUT}/${SYNONYM}-ABACAS.fasta
@@ -68,7 +69,7 @@ ABO-i               =     80#  mimimum percent identity [default 40].
 ABO-l               =    200#  minimum contig length [default 100].
 
 #
-QUAST               = /usr/local/src/NGS-DIR/QUAST/quast-2.3
+# QUAST
 ABACAS-QUAST_REPORT = ${RGA_DIR}/${SYNONYM}-ABACAS-QUAST/report.pdf
 GF-QUAST_REPORT     = ${RGA_DIR}/${SYNONYM}-GF-QUAST/report.pdf
 QUAST_OPTIONS       = -t ${QTO-t} --${QTO-e} --${QTO-s} --${QTO-g} --${QTO-f} --min-contig ${QTO-m}
@@ -81,7 +82,7 @@ QTO-f               =                gene-finding# Enables gene finding. Affects
 QTO-m               =                         500# Lower threshold for a contig length
 
 #
-GAPFILLER_DIR       =  /usr/local/src/NGS-DIR/GAPFILLER/GapFiller_v1-10_linux-x86_64
+# GAPFILLER
 GAPFILLED_ASSEMBLY  =  ${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa
 #
 GAPFILLER_OPTIONS   =  -m ${GFO-m} -o ${GFO-o} -r ${GFO-r} -d ${GFO-d} -n ${GFO-n} -t ${GFO-t} \
@@ -162,20 +163,6 @@ show:
 ## 1. ALignGraph to improve the assembly of scaffolds and contigs with a closely related and well assembled genome or segment of sequence (target).
 #
 ${ALIGNGRAPH_OUTPUT}/0README:	
-ifeq ("$(wildcard ./${ALIGNGRAPH_OUTPUT})","")
-	mkdir ${ALIGNGRAPH_OUTPUT}
-endif
-	@echo "This directory contains output of the AlignGraph program." > ${ALIGNGRAPH_OUTPUT}/0README
-
-# Convert the trimmed reads format from fastq to fasta
-#
-${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa:	preparedreads ${ALIGNGRAPH_OUTPUT}/0README
-	ln -s ${READS_1}.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa
-	
-${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa:	preparedreads ${ALIGNGRAPH_OUTPUT}/0README
-	ln -s ${READS_2}.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa
-
-preparedreads:
 ifeq ("$(wildcard ${READS_1}.fa)","")
 	$(error "${READS_1}.fa not found.  Please make sure that the specified reads have been prepared.")
 endif
@@ -188,21 +175,33 @@ endif
 ifeq ("$(wildcard ${READS_2}.fq)","")
 	$(error "${READS_2}.fq not found.  Please make sure that the specified reads have been prepared.")
 endif
+ifeq ("$(wildcard ./${ALIGNGRAPH_OUTPUT})","")
+	mkdir ${ALIGNGRAPH_OUTPUT}
+endif
+	@echo "This directory contains output of the AlignGraph program." > ${ALIGNGRAPH_OUTPUT}/0README
+	sleep 1
+
+# Convert the trimmed reads format from fastq to fasta
+#
+${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa:	${ALIGNGRAPH_OUTPUT}/0README
+	-ln -s ${READS_1}.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa
+	
+${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa:	${ALIGNGRAPH_OUTPUT}/0README
+	-ln -s ${READS_2}.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa
 
 
 # run AlignGraph
 #
-${ALIGNGRAPH_OUTPUT}/%-ALG_ext.fa ${ALIGNGRAPH_OUTPUT}/%-ALG_rem.fa:	preparedtarget ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa
+${ALIGNGRAPH_OUTPUT}/%-ALG_ext.fa ${ALIGNGRAPH_OUTPUT}/%-ALG_rem.fa:	${ALIGNGRAPH_OUTPUT}/${SYNONYM}_1.fa ${ALIGNGRAPH_OUTPUT}/${SYNONYM}_2.fa
 ifeq ("$(wildcard ${SCAFFOLDS})","")
 	$(error "Input ${SCAFFOLDS} to AlignGraph not found.  Please check.")
+endif
+ifeq ("$(wildcard ${TARGET_DIR}/${TARGET_SEQ})","")
+	$(error "${TARGET_DIR}/${TARGET_SEQ} not found.")
 endif
 	cd ${ALIGNGRAPH_OUTPUT}; \
 	${ALIGNGRAPH}/AlignGraph --read1 ${SYNONYM}_1.fa --read2 ${SYNONYM}_2.fa --contig ${SCAFFOLDS} --genome ${TARGET_DIR}/${TARGET_SEQ} ${ALIGNGRAPH_OPTIONS} --extendedContig ${SYNONYM}-ALG_ext.fa --remainingContig ${SYNONYM}-ALG_rem.fa
 
-preparedtarget:
-ifeq ("$(wildcard ${TARGET_DIR}/${TARGET_SEQ})","")
-	$(error "${TARGET_DIR}/${TARGET_SEQ} not found.")
-endif
 
 # concatenate AlignGraph-extended Contigs and AlignGraph-remaining Contigs.
 #
@@ -217,6 +216,7 @@ ifeq ("$(wildcard ./${ABACAS_OUTPUT})","")
 	mkdir ${ABACAS_OUTPUT}
 endif
 	@echo "This directory contains output of the ABACAS program." > ${ABACAS_OUTPUT}/0README
+	sleep 1
 
 ${ABACAS_ASSEMBLY}:	${ABACAS_OUTPUT}/0README ${TARGET_DIR}/${TARGET_SEQ} ${ALIGNGRAPH_OUTPUT}/${SYNONYM}-ALG.fa
 	cd ${ABACAS_OUTPUT}; \
@@ -228,7 +228,7 @@ ${ABACAS-QUAST_REPORT}:	${ABACAS_ASSEMBLY} ${TARGET_DIR}/${TARGET_SEQ}
 
 ## 4. GapFiller to fill the gaps in ${SYNONYM}-ABACAS.fasta  using PE reads
 #
-GapFiller.conf:		preparedreads
+GapFiller.conf:		${ALIGNGRAPH_OUTPUT}/0README
 	@echo "${GFC-1} ${GFC-2} ${GFC-3} ${GFC-4} ${GFC-5} ${GFC-6} ${GFC-7}" > GapFiller.conf
 
 ${GAPFILLED_ASSEMBLY}:	GapFiller.conf ${ABACAS_ASSEMBLY}
@@ -242,6 +242,7 @@ ifeq ("$(wildcard ./${RATT_OUTPUT})","")
 	mkdir ${RATT_OUTPUT}
 endif
 	@echo "This directory contains output of the RATT program." > ${RATT_OUTPUT}/0README
+	sleep 1
 
 ${RATT_OUTPUT}/${RTO-d}/${TARGET_EMBL}:	${RATT_OUTPUT}/0README
 ifeq ("$(wildcard ${RATT_OUTPUT}/${RTO-d})","")
@@ -273,6 +274,7 @@ ifeq ("$(wildcard ./${EVALUATION_DIR})","")
 	mkdir ${EVALUATION_DIR}
 endif
 	@echo "This directory contains final results and evaluations of the workflow." > ${EVALUATION_DIR}/0README
+	sleep 1
 	cp ${RATT_OUTPUT}/${SYNONYM}-${TARGET_SEQNAME}.fa ${EVALUATION_DIR}/
 	cp ${RATT_OUTPUT}/${RTO-r}.${SYNONYM}-${TARGET_SEQNAME}.final.embl ${EVALUATION_DIR}/${SYNONYM}-${TARGET_SEQNAME}.embl
 	cp ${RATT_OUTPUT}/${RTO-r}.${SYNONYM}-${TARGET_SEQNAME}.Report.gff ${EVALUATION_DIR}/${SYNONYM}-${TARGET_SEQNAME}.gff3
