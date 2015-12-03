@@ -23,13 +23,13 @@ All UNIX machines have one or more *installation directories*, such as `/usr` an
 Within an installation directory, you will find subdirectories such as `bin` for executables, `include` for header files, `lib` for shared libraries, and so on.
 For TRegGA installation, we recommend creating a dedicated installation directory within the root TRegGA directory, especially if you do not have administrative access to the machine.
 The installation instructions below are written for this use case, although it should be fairly simple to adapt them to a different setup if needed.
-In particular, if any of these programs are already installed on your system, there should be no need to re-install them, assuming they are in your path (a couple of exceptions noted below).
+In particular, if any of the prerequisite programs are already installed on your system, there should be no need to re-install them, assuming they are in your path (a couple of exceptions noted below).
 
 In all of the examples below, the variable `$TRG_ROOT` refers to the TRegGA root directory, or the directory on your system that directly contains this file.
 
 ```
 # Before proceeding, create installation directory
-mkdir $TRG_ROOT/local
+mkdir -p $TRG_ROOT/local
 
 # Add the bin directory to your PATH.
 # You may want to add this to your ~/.bashrc or ~/.bash_profile file, or
