@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -exo pipefail
 source ../TRegGA.config
 
 for chr in {1..12}
