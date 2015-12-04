@@ -21,7 +21,7 @@ These instructions may require minor adjustments depending on your operating sys
 
 All UNIX machines have one or more *installation directories*, such as `/usr` and `/usr/local`, where software is installed.
 Within an installation directory, you will find subdirectories such as `bin` for executables, `include` for header files, `lib` for shared libraries, and so on.
-For TRegGA installation, we recommend creating a dedicated installation directory within the root TRegGA directory, especially if you do not have administrative access to the machine.
+For TRegGA installation, we recommend creating a dedicated installation directory within the root TRegGA directory and placing its `bin` directory in your `$PATH`, especially if you do not have administrative access to the machine.
 The installation instructions below are written for this use case, although it should be fairly simple to adapt them to a different setup if needed.
 In particular, if any of the prerequisite programs are already installed on your system, there should be no need to re-install them, assuming they are in your path (a couple of exceptions noted below).
 
@@ -29,7 +29,8 @@ In all of the examples below, the variable `$TRG_ROOT` refers to the TRegGA root
 
 ```
 # Before proceeding, create installation directory
-mkdir -p $TRG_ROOT/local
+mkdir -p $TRG_ROOT/local/src
+mkdir -p $TRG_ROOT/local/bin
 
 # Add the bin directory to your PATH.
 # You may want to add this to your ~/.bashrc or ~/.bash_profile file, or
@@ -42,11 +43,8 @@ export PATH=$TRG_ROOT/local/bin:$PATH
 With a few exceptions, all prerequisites simply need to be placed in your `PATH` variable for TRegGA to work properly.
 Here we provide details for the exceptions.
 
-- KmerGenie must be executed using a full path to the program's source code distribution.
-  Simply dropping it in your path won't work.
+- Adding the KmerGenie directory to your `$PATH` will not work, it must be executed using the full path to the program's source code distribution.
 - Trimmomatic is distributed as a Java .jar file, and cannot be run without the full path to that .jar file.
-- Artemis (optional; for visualization) must be executed using the full path to the program (is this correct?).
-- Quast?
 
 The user (you!) must provide the locations of these software components in a file named `TRegGA.config`, placed in the TRegGA root directory.
 Use the file `TRegGA.config.example` as a template.
@@ -162,8 +160,19 @@ Last update: July 5, 2015
 
 Note a license agreement (free for academics) is required.
 
-A small patch must be applied to `GapFiller.pl`.
-**DESCRIBE HERE**.
+```
+cd $TRG_ROOT/local/src
+mv /path/to/gapfiller/GapFiller_v1-10_linux-x86_64.tar.gz .
+tar xzf GapFiller_v1-10_linux-x86_64.tar.gz
+
+# We need to apply a small patch to the program so that it will work
+# with modern versions of Perl.
+cd GapFiller_v1-10_linux-x86_64
+cp GapFiller.pl GapFiller.plORIG
+patch GapFiller.plORIG -i $TRG_ROOT/patches/gapfiller.patch -o GapFiller.pl
+chmod 755 GapFiller.pl
+cp GapFiller.pl $TRG_ROOT/local/bin/
+```
 
 ### GenomeThreader
 
@@ -229,16 +238,18 @@ cp bin/* $TRG_ROOT/local/bin/
 
 ### PAGIT
 
-See from http://www.sanger.ac.uk/resources/software/pagit.
+See http://www.sanger.ac.uk/science/tools/pagit.
 Last update: July 7, 2015.
 
 ```
 cd $TRG_ROOT/local/src/
+mkdir PAGIT
+cd PAGIT/
 wget ftp://ftp.sanger.ac.uk/pub/resources/software/pagit/PAGIT.V1.64bit.tgz
 tar -xzf PAGIT.V1.64bit.tgz 
 bash ./installme.sh 
 # (add to .bashrc:  source $TRG_ROOT/local/src/PAGIT/sourceme.pagit)
-cd RATT
+cd PAGIT/RATT/
 rm main.ratt.pl~ ratt_correction.pm~ start.ratt.sh~
 cp RATT.config_euk RATT.config
 ```
@@ -249,58 +260,22 @@ See http://bioinf.spbau.ru/quast.
 Last update: July 6, 2015.
 
 ```
-pip install numpy scipy matplotlib ipython pandas nose
+pip install matplotlib
+# You may need to replace the previous command with one of the following
+# OS-specific commands depending on your OS.
+# sudo yum install python-matplotlib
+# sudo apt-get install python-matplotlib
 
 cd $TRG_ROOT/local/src/
 wget http://sourceforge.net/projects/quast/files/quast-2.3.tar.gz/download
 mv download quast-2.3.tar.gz
 tar -xzf quast-2.3.tar.gz
-# Please see 0README in /usr/local/src/NGS-DIR/QUAST for changes made to the code.
 cd quast-2.3
+cp libs/gage.py libs/gage.pyORIG
+patch libs/gage.pyORIG -i $TRG_ROOT/patches/quast.patch -o libs/gage.py
 # The following tests are more than tests: these runs also compile the code.
 python quast.py --gage --test
 python metaquast.py --test
-```
-
-Notes to clean up.
-
-```
-Two changes were made to the QUAST code distribution:
-
-1) Installation should proceed with
-
-        python quast.py --gage --test
-
-instead of leaving out the "--gage" option.  The reason for this is that the code gets
-compiled on first use, and this should be done by root at install to make gage.py work
-for all users in future runs.
-
-Change recorded in updated INSTALL file (compared to INSTALLorig).
-
-2) Line 38 of libs/gage.py should have "return_code != 0:" instead of "return_code == 0:", I believe.
-At least in all runs, return_code 0 gave error-free results that presumably should be logged as
-'Done" rather than "Failed".
-
-Original code saved as libs/gage.pyORIG.
-```
-
-```
-	sudo yum install numpy scipy python-matplotlib ipython python-pandas sympy python-nose
-
-	! The following notes re installation of packages would be specific to particular machines.
-	python -c "import numpy; print numpy.__version__"
-	updatedb
-	locate numpy | more
-
-	pip uninstall numpy
-	pip install --upgrade numpy
-	updatedb
-	locate numpy | more
-	python -c "import numpy; print numpy.__version__"
-
-	! The following tests are more than tests: these runs also compile the code.
-	python quast.py --gage --test
-	python metaquast.py --test
 ```
 
 ### Samtools

@@ -1,0 +1,4 @@
+38c38
+<     if return_code == 0:
+---
+>     if return_code != 0:
