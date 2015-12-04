@@ -1,15 +1,15 @@
-# TRegGA: <small>*T*argeted *Re*ference-*g*uided *G*enome *A*ssembly for Comparative Rice Genomics</small>
+# TRegGA: Targeted Reference-guided Genome Assembly for Comparative Rice Genomics
 
-TRegGA is a fully automated workflow designed for locus-scale analysis of rice genomes, especially those sequenced in the [3k Rice Genomes Project (3kRGP)][http://gigadb.org/dataset/200001].
+TRegGA is a fully automated workflow designed for locus-scale analysis of rice genomes, especially those sequenced in the [3k Rice Genomes Project (3kRGP)](http://gigadb.org/dataset/200001).
 It is free open-source software, and utilizes a variety of third-party software for retrieving, processing, and annotating genome data.
 TRegGA offers a richer view of rice genome variation than SNP databases, as it uses genome assembly to capture the entire genomic context in a way that cannot be done with mapping against a reference.
 
 ## Getting Started
 
-- [Install TRegGA](docs/INSTALL.md).
-- [Configure TRegGA](docs/CONFIG.md).
-- [Download ancillary data](docs/SETUP.md).
-- [Execute a test example](docs/TEST.md).
+- [Install TRegGA](docs/INSTALL.md)
+- [Configure TRegGA](docs/CONFIG.md)
+- [Download/prepare ancillary data](docs/SETUP.md)
+- [Execute a test example](docs/TEST.md)
 
 **Note**: TRegGA is not designed to run on a latop.
 You'll want a machine with plenty of storage space and a fast Internet connection.
