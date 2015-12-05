@@ -34,40 +34,27 @@ cp TRegGA.config.example TRegGA.config
 # Edit TRegGA.config
 ```
 
-## Directory structure
+## Software Prerequisites
 
-All UNIX machines have one or more *installation directories*, such as `/usr` and `/usr/local`, where software is installed.
-Within an installation directory, you will find subdirectories such as `bin` for executables, `include` for header files, `lib` for shared libraries, and so on.
+With a couple of exceptions (KmerGenie and Trimmomatic), all software prerequisites simply need to be placed in your `$PATH` for TRegGA to work properly.
 For TRegGA installation, we recommend creating a dedicated installation directory within the root TRegGA directory and placing its `bin` directory in your `$PATH`, especially if you do not have administrative access to the machine.
-The installation instructions below are written for this use case, although it should be fairly simple to adapt them to a different setup if needed.
-In particular, if any of the prerequisite programs are already installed on your system, there should be no need to re-install them, assuming they are in your path (in a few special cases, a full path to the software installation directory is ).
+All instructions below are written for this use case, although it should be fairly simple to adapt them to a different setup if needed.
+In particular, if any of the prerequisite programs are already installed on your system, there should be no need to re-install them, assuming they are in your path.
+The script `check-prereqs.sh` is provided to facilitate troubleshooting: use it as a checklist while installing.
 
-In all of the examples below, the variable `$TRegGA_DIR` refers to the TRegGA root directory, or the directory on your system that directly contains this file.
+In all of the examples below, the variable `$TRegGA_DIR` is a placeholder for the absolute path of the TRegGA root directory, or the directory on your system that directly contains this file.
+Replace this value with the actual directory path (or set the variable) before you execute the commands below.
 
 ```
-# Before proceeding, create installation directory
+# Before proceeding, create the installation directory
 mkdir -p $TRegGA_DIR/local/src
 mkdir -p $TRegGA_DIR/local/bin
 
 # Add the bin directory to your PATH.
-# You may want to add this to your ~/.bashrc or ~/.bash_profile file, or
-# include this in your launch script if you are executing TRegGA on a cluster.
+# You may want to add this command to your ~/.bashrc or ~/.bash_profile file,
+# or include it in your launch script if you are executing TRegGA on a cluster.
 export PATH=$TRegGA_DIR/local/bin:$PATH
 ```
-
-## Prerequisites
-
-With a few exceptions, all prerequisites simply need to be placed in your `PATH` variable for TRegGA to work properly.
-Here we provide details for the exceptions.
-
-- Adding the KmerGenie directory to your `$PATH` will not work, it must be executed using the full path to the program's source code distribution.
-- Trimmomatic is distributed as a Java .jar file, and cannot be run without the full path to that .jar file.
-
-The user (you!) must provide the locations of these software components in a file named `TRegGA.config`, placed in the TRegGA root directory.
-Use the file `TRegGA.config.example` as a template.
-
-The script `check-prereqs.sh` is provided to facilitate troubleshooting.
-Use it as a checklist while installing.
 
 ### AlignGraph
 
@@ -239,6 +226,9 @@ make
 # invoke as /usr/local/src/NGS-DIR/KmerGenie/kmergenie-1.6950/kmergenie
 ```
 
+**Note**: The path to the KmerGenie direcory must be placed in the `$TRegGA_DIR/TRegGA.config` file.
+The program cannot simply be placed in the `$PATH`, it must be executed with its full file path.
+
 ### NGSUtils
 
 See http://ngsutils.org.
@@ -346,3 +336,5 @@ wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-
 unzip Trimmomatic-0.33.zip
 ```
 
+**Note**: Trimmomatic is distributed as a Java .jar file.
+The path of the .jar file must be placed in the `$TRegGA_DIR/TRegGA.config` file.

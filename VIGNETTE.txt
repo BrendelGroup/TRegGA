@@ -1,3 +1,5 @@
+# TRegGA: Getting Started
+
 Makefile_TRegGA-orig is the master makefile to run the complete TRegGA workflow, from
 read preparation to de novo assembly and reference-guided assembly.  The individual steps
 (read preparation; target selection; de novo assembly; reference-guided assembly) can
@@ -98,10 +100,3 @@ would produce the files for a new target (NbEL2).
 
 would use 8 processors to run the reference-guided assembly of Dagangzhan on this second target (NbEL2),
 using the existing reads and de novo assembly.
-
-##-----------
-TRegGA-INSTALL contains general installation instructions for the programs used by TRegGA. 
-
-TRegGA.config contains TRegGA runtime configuration for program locations that needs to be included into makefiles. TRegGA.config.mason is specific to Mason.indiana.edu, and should replace TRegGA.config before TRegGA execution.
-
-TRegGA.source contains TRegGA runtime configuration for program locations that needs to be included into shell environment. TRegGA.source.mason is specific to Mason.indiana.edu, and should replace TRegGA.source before TRegGA execution.

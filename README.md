@@ -6,10 +6,12 @@ TRegGA offers a richer view of rice genome variation than SNP databases, as it u
 
 ## Getting Started
 
-- [Install TRegGA](docs/INSTALL.md)
-- [Configure TRegGA](docs/CONFIG.md)
-- [Download/prepare ancillary data](docs/SETUP.md)
-- [Execute a test example](docs/TEST.md)
+See **[INSTALL.md](INSTALL.md)** for a detailed installation manual.
+Once TRegGA is configured and all software prerequisites are installed, complete the installation by executing `bash setup.sh` in your terminal.
+This will download and preprare reference genomes and other ancillary data required by the TRegGA workflow.
+
+We do not yet have a small automated test to verify that TRegGA is working properly.
+In the mean time, see **[VIGNETTE.txt](VIGNETTE.txt)** for some examples that can be used for testing.
 
 **Note**: TRegGA is not designed to run on a latop.
 You'll want a machine with plenty of storage space and a fast Internet connection.
