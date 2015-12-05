@@ -22,7 +22,8 @@ cd TRegGA/
 
 The TRegGA software itself is implemented primarily as a collection of shell scripts and Makefile-based workflows, so no compilation is needed.
 However, TRegGA depends on several third-party programs and libraries, many of which do require compiling and/or additional configuration for your particular system (details below).
-(**Note**: TRegGA has been tested and is supported on Linux, will *probably* work on Mac OS X and other UNIX systems, but is not supported on Windows.)
+
+**Note**: TRegGA has been tested and is supported on Linux, will *probably* work on Mac OS X and other UNIX systems, but is not supported on Windows.
 
 Most programs required by TRegGA will work fine as long as they are in the `$PATH`.
 However, there are a few that require the full path to the software's installation directory.
@@ -31,7 +32,7 @@ Make a copy of the `TRegGA.config.example` file and edit the copy with the corre
 
 ```bash
 cp TRegGA.config.example TRegGA.config
-# Edit TRegGA.config
+# Now edit TRegGA.config
 ```
 
 ## Software Prerequisites
@@ -45,7 +46,7 @@ The script `check-prereqs.sh` is provided to facilitate troubleshooting: use it 
 In all of the examples below, the variable `$TRegGA_DIR` is a placeholder for the absolute path of the TRegGA root directory, or the directory on your system that directly contains this file.
 Replace this value with the actual directory path (or set the variable) before you execute the commands below.
 
-```
+```bash
 # Before proceeding, create the installation directory
 mkdir -p $TRegGA_DIR/local/src
 mkdir -p $TRegGA_DIR/local/bin
@@ -61,7 +62,7 @@ export PATH=$TRegGA_DIR/local/bin:$PATH
 See https://github.com/baoe/AlignGraph.
 Last update: July 5, 2015
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 git clone https://github.com/baoe/AlignGraph.git
 cd AlignGraph/
@@ -77,7 +78,7 @@ mv blat $TRegGA_DIR/local/bin/
 See https://www.sanger.ac.uk/resources/software/artemis.
 Last update: July 13, 2015
 
-```
+```bash
 cd $TRegGA_DIR/local/src
 wget ftp://ftp.sanger.ac.uk/pub/resources/software/artemis/artemis.tar.gz
 tar -xzf artemis.tar.gz
@@ -91,7 +92,7 @@ cp act art dnaplotter $TRegGA_DIR/local/bin/
 See http://bowtie-bio.sourceforge.net/index.shtml.
 Last update: December 3, 2015
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/BenLangmead/bowtie/archive/v1.1.2.tar.gz
 tar xzf v1.1.2.tar.gz
@@ -105,7 +106,7 @@ make prefix=$TRegGA_DIR/local/ install
 See http://bowtie-bio.sourceforge.net/bowtie2/index.shtml.
 Last update: December 3, 2015
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/BenLangmead/bowtie2/archive/v2.2.5.tar.gz
 tar xzf v2.2.5.tar.gz 
@@ -119,7 +120,7 @@ cp bowtie2* $TRegGA_DIR/local/bin/
 See http://bio-bwa.sourceforge.net.
 Last update: December 3, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/lh3/bwa/archive/0.7.12.tar.gz
 tar xzf 0.7.12.tar.gz 
@@ -133,7 +134,7 @@ cp bwa $TRegGA_DIR/local/bin/
 See http://emboss.open-bio.org.
 Last update: December 3, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 # Link is broken!
 wget ftp://emboss.open-bio.org/pub/EMBOSS/EMBOSS-latest.tar.gz
@@ -149,7 +150,7 @@ make install
 See http://www.bioinformatics.babraham.ac.uk/projects/fastqc.
 Last update: July 5, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.3.zip
 unzip fastqc_v0.11.3.zip
@@ -164,7 +165,7 @@ Last update: July 5, 2015
 
 Note a license agreement (free for academics) is required.
 
-```
+```bash
 cd $TRegGA_DIR/local/src
 mv /path/to/gapfiller/GapFiller_v1-10_linux-x86_64.tar.gz .
 tar xzf GapFiller_v1-10_linux-x86_64.tar.gz
@@ -185,7 +186,7 @@ Last update: December 3, 2015.
 
 Note a license agreement (free for academics) is required.
 
-```
+```bash
 # Obtain license file `gth.lic` before proceeding.
 cd $TRegGA_DIR/local/src/
 wget http://genomethreader.org/distributions/gth-1.6.5-Linux_x86_64-64bit.tar.gz
@@ -203,7 +204,7 @@ export GTHDATADIR=$TRegGA_DIR/local/bin/gthdata
 See http://genometools.org.
 Last update: December 3, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget http://genometools.org/pub/genometools-1.5.6.tar.gz
 tar -xzf genometools-1.5.6.tar.gz
@@ -217,7 +218,7 @@ make cairo=no prefix=$TRegGA_DIR/local install
 See http://kmergenie.bx.psu.edu/
 Last update: July 5, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget http://kmergenie.bx.psu.edu/kmergenie-1.6950.tar.gz
 tar -xzf kmergenie-1.6950.tar.gz 
@@ -234,7 +235,7 @@ The program cannot simply be placed in the `$PATH`, it must be executed with its
 See http://ngsutils.org.
 Last update: July 5, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/ngsutils/ngsutils/archive/ngsutils-0.5.7.tar.gz
 tar xzf ngsutils-0.5.7.tar.gz 
@@ -248,7 +249,7 @@ cp bin/* $TRegGA_DIR/local/bin/
 See http://www.sanger.ac.uk/science/tools/pagit.
 Last update: July 7, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 mkdir PAGIT
 cd PAGIT/
@@ -266,7 +267,7 @@ cp RATT.config_euk RATT.config
 See http://bioinf.spbau.ru/quast.
 Last update: July 6, 2015.
 
-```
+```bash
 pip install matplotlib
 # You may need to replace the previous command with one of the following
 # OS-specific commands depending on your OS.
@@ -290,7 +291,7 @@ python metaquast.py --test
 See http://www.htslib.org.
 Last update: December 3, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/samtools/samtools/releases/download/1.2/samtools-1.2.tar.bz2
 tar xjf samtools-1.2.tar.bz2 
@@ -304,7 +305,7 @@ make prefix=$TRegGA_DIR/local install
 See http://soap.genomics.org.cn/soapdenovo.html.
 Last update: July 31, 2013.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget http://sourceforge.net/projects/soapdenovo2/files/SOAPdenovo2/bin/r240/SOAPdenovo2-bin-LINUX-generic-r240.tgz
 tar -xzf SOAPdenovo2-bin-LINUX-generic-r240.tgz 
@@ -318,7 +319,7 @@ cp *mer $TRegGA_DIR/local/bin/
 See http://www.ncbi.nlm.nih.gov/books/NBK158900.
 Last update: July 5, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.2/sratoolkit.2.5.2-centos_linux64.tar.gz
 tar -xzf sratoolkit.2.5.2-centos_linux64.tar.gz
@@ -330,7 +331,7 @@ cp sratoolkit.2.5.2-centos_linux64/bin/* $TRegGA_DIR/local/bin/
 See http://www.usadellab.org/cms/index.php?page=trimmomatic.
 Last update: July 5, 2015.
 
-```
+```bash
 cd $TRegGA_DIR/local/src/
 wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.33.zip
 unzip Trimmomatic-0.33.zip
