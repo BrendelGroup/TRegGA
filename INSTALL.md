@@ -7,7 +7,7 @@ Stable releases of TRegGA can be obtained from the [releases page](https://githu
 ```bash
 # Of course, replace 'vX.Y.Z' with the actual version number
 wget https://github.com/BrendelGroup/TRegGA/archive/vX.Y.Z.tar.gz
-tar xzf vX.Y.Z.tar.xzf
+tar -xzf vX.Y.Z.tar.xzf
 cd TRegGA-vX.Y.Z/
 ```
 
@@ -95,7 +95,7 @@ Last update: December 3, 2015
 ```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/BenLangmead/bowtie/archive/v1.1.2.tar.gz
-tar xzf v1.1.2.tar.gz
+tar -xzf v1.1.2.tar.gz
 cd bowtie-1.1.2/
 make
 make prefix=$TRegGA_DIR/local/ install
@@ -109,7 +109,7 @@ Last update: December 3, 2015
 ```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/BenLangmead/bowtie2/archive/v2.2.5.tar.gz
-tar xzf v2.2.5.tar.gz 
+tar -xzf v2.2.5.tar.gz
 cd bowtie2-2.2.5/
 make
 cp bowtie2* $TRegGA_DIR/local/bin/
@@ -123,7 +123,7 @@ Last update: December 3, 2015.
 ```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/lh3/bwa/archive/0.7.12.tar.gz
-tar xzf 0.7.12.tar.gz 
+tar -xzf 0.7.12.tar.gz
 cd bwa-0.7.12/
 make
 cp bwa $TRegGA_DIR/local/bin/
@@ -168,7 +168,7 @@ Note a license agreement (free for academics) is required.
 ```bash
 cd $TRegGA_DIR/local/src
 mv /path/to/gapfiller/GapFiller_v1-10_linux-x86_64.tar.gz .
-tar xzf GapFiller_v1-10_linux-x86_64.tar.gz
+tar -xzf GapFiller_v1-10_linux-x86_64.tar.gz
 
 # We need to apply a small patch to the program so that it will work
 # with modern versions of Perl.
@@ -221,10 +221,9 @@ Last update: July 5, 2015.
 ```bash
 cd $TRegGA_DIR/local/src/
 wget http://kmergenie.bx.psu.edu/kmergenie-1.6950.tar.gz
-tar -xzf kmergenie-1.6950.tar.gz 
+tar -xzf kmergenie-1.6950.tar.gz
 cd kmergenie-1.6950/
 make
-# invoke as /usr/local/src/NGS-DIR/KmerGenie/kmergenie-1.6950/kmergenie
 ```
 
 **Note**: The path to the KmerGenie direcory must be placed in the `$TRegGA_DIR/TRegGA.config` file.
@@ -238,7 +237,7 @@ Last update: July 5, 2015.
 ```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/ngsutils/ngsutils/archive/ngsutils-0.5.7.tar.gz
-tar xzf ngsutils-0.5.7.tar.gz 
+tar -xzf ngsutils-0.5.7.tar.gz
 cd ngsutils-ngsutils-0.5.7/
 make
 cp bin/* $TRegGA_DIR/local/bin/
@@ -254,8 +253,8 @@ cd $TRegGA_DIR/local/src/
 mkdir PAGIT
 cd PAGIT/
 wget ftp://ftp.sanger.ac.uk/pub/resources/software/pagit/PAGIT.V1.64bit.tgz
-tar -xzf PAGIT.V1.64bit.tgz 
-bash ./installme.sh 
+tar -xzf PAGIT.V1.64bit.tgz
+bash ./installme.sh
 # (add to .bashrc:  source $TRegGA_DIR/local/src/PAGIT/sourceme.pagit)
 cd PAGIT/RATT/
 rm main.ratt.pl~ ratt_correction.pm~ start.ratt.sh~
@@ -294,7 +293,7 @@ Last update: December 3, 2015.
 ```bash
 cd $TRegGA_DIR/local/src/
 wget https://github.com/samtools/samtools/releases/download/1.2/samtools-1.2.tar.bz2
-tar xjf samtools-1.2.tar.bz2 
+tar -xjf samtools-1.2.tar.bz2
 cd samtools-1.2/
 make prefix=$TRegGA_DIR/local
 make prefix=$TRegGA_DIR/local install
@@ -308,7 +307,7 @@ Last update: July 31, 2013.
 ```bash
 cd $TRegGA_DIR/local/src/
 wget http://sourceforge.net/projects/soapdenovo2/files/SOAPdenovo2/bin/r240/SOAPdenovo2-bin-LINUX-generic-r240.tgz
-tar -xzf SOAPdenovo2-bin-LINUX-generic-r240.tgz 
+tar -xzf SOAPdenovo2-bin-LINUX-generic-r240.tgz
 cd SOAPdenovo2-bin-LINUX-generic-r240/
 chmod a+x *mer
 cp *mer $TRegGA_DIR/local/bin/
