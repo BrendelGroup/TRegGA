@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-for module in numpy matplotlib; do
+for module in numpy matplotlib Bio; do
     echo -n "[TRegGA] Python module $module ... "
     python -c "import $module" > /dev/null 2>&1
     returnstatus=$?

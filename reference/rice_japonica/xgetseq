@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -exo pipefail
 
-#0. Check for software prerequisites:
+# 0. Check for software prerequisites:
 which makeblastdb
 which gt
 which blastdbcmd
 
-#1. Retrieve Oryza sativa japonica (Osj) sequences from Ensembl:
+
+# 1. Retrieve Oryza sativa japonica (Osj) sequences from Ensembl:
 
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna.genome.fa.gz
 wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/embl/oryza_sativa/Oryza_sativa.IRGSP-1.0.26.dat.gz
@@ -18,52 +19,57 @@ gunzip -f *.gz
 mv Oryza_sativa.IRGSP-1.0.26.dat Oryza_sativa.IRGSP-1.0.26.embl
 
 
-#2. Add the label "OsjChr" to the chromosome sequence names so that ">1" becomes ">OsjChr1", etc.:
-#
+# 2. Add the label "OsjChr" to the chromosome sequence names so that ">1" becomes ">OsjChr1", etc.:
+
 sed -i -e "s/^>\([1-9]\)/>OsjChr\1/" Oryza_sativa.IRGSP-1.0.26.dna.genome.fa 
 
 
-#3. Create BLAST databases for the genome and protein sequences:
-#
+# 3. Create BLAST databases for the genome and protein sequences:
+
 makeblastdb -in Oryza_sativa.IRGSP-1.0.26.dna.genome.fa -dbtype nucl -parse_seqids -out OsjDNA
 makeblastdb -in Oryza_sativa.IRGSP-1.0.26.pep.all.fa    -dbtype prot -parse_seqids -out OsjPEP
 
-#4. Prepare OsjPRT for use with gth:
-#
+
+# 4. Prepare OsjPRT for use with gth:
+
 gt seqtransform -addstopaminos Oryza_sativa.IRGSP-1.0.26.pep.all.fa > OsjPRT
 
-#5. Extract the chromosome sequences into file OsjCHR.fa:
-#
-blastdbcmd -db OsjDNA -entry OsjChr1,OsjChr2,OsjChr3,OsjChr4,OsjChr5,OsjChr6,OsjChr7,OsjChr8,OsjChr9,OsjChr10,OsjChr11,OsjChr12 | sed "s/^>lcl|/>/;" > OsjCHR.fa
 
-#5. Retrieve the repeat-masked chromosome sequences:
-#
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.1.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.2.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.3.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.4.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.5.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.6.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.7.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.8.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.9.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.10.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.11.fa.gz
-wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.12.fa.gz
+# 5. Extract the chromosome sequences into file OsjCHR.fa:
+
+blastdbcmd -db OsjDNA -entry OsjChr1,OsjChr2,OsjChr3,OsjChr4,OsjChr5,OsjChr6,OsjChr7,OsjChr8,OsjChr9,OsjChr10,OsjChr11,OsjChr12 \
+    | sed "s/^>lcl|/>/;" \
+    > OsjCHR.fa
+
+
+# 6. Retrieve the repeat-masked chromosome sequences:
+
+for i in {1..12}; do
+    wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.${i}.fa.gz
+done
 
 gunzip -f *dna_rm.*fa.gz
 
-#7. Change the names to OsjRmChr* and compile into file OsjRMCHR.fa, then clean up:
-#
-cat *dna_rm.chromosome.[1-9].fa *dna_rm.chromosome.1[0-2].fa | sed -e "s/^>\([1-9]\)/>OsjRmChr\1/" > OsjRMCHR.fa
+
+# 7. Change the names to OsjRmChr* and compile into file OsjRMCHR.fa, then clean up:
+
+cat *dna_rm.chromosome.[1-9].fa *dna_rm.chromosome.1[0-2].fa \
+    | sed -e "s/^>\([1-9]\)/>OsjRmChr\1/" \
+    > OsjRMCHR.fa
 \rm *dna_rm.chromosome.*fa
 
-#8. Extract gene coordinates from the *.gff3 file with sequence identifiers appropriate for unmasked and masked
-#   chromosome sequences (for possible use with QUAST):
-#
-sed -e "s/^\([1-9]\)/OsjChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3   | egrep "^##|^OsjChr.*	gene	"         > OsjCHR.gff3
-sed -e "s/^\([1-9]\)/OsjRmChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3 | egrep "^##|^OsjRmChr.*	gene	" > OsjRMCHR.gff3
 
-#8. Verify the files have been downloaded and processed correctly.
-#
+# 8. Extract gene coordinates from the *.gff3 file with sequence identifiers appropriate for unmasked and masked
+#    chromosome sequences (for possible use with QUAST):
+
+sed -e "s/^\([1-9]\)/OsjChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3 \
+    | egrep "^##|^OsjChr.*	gene	" \
+    > OsjCHR.gff3
+sed -e "s/^\([1-9]\)/OsjRmChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3 \
+    | egrep "^##|^OsjRmChr.*	gene	" \
+    > OsjRMCHR.gff3
+
+
+# 9. Verify the files have been downloaded and processed correctly.
+
 shasum -c checksums.sha
