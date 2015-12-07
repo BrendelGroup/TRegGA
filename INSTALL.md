@@ -87,6 +87,19 @@ cp act art dnaplotter $TRegGA_DIR/local/bin/
 # This previous line confuses me. If we have to run it from the full path, why are we copying it to the bin dir?
 ```
 
+### BioPython
+
+See http://biopython.org/wiki/Main_Page.
+Last update: December 7th, 2015.
+
+If you have administrative privileges on the machine, use your [package manager](http://biopython.org/wiki/Download#Packages) for best results.
+Otherwise, we recommend using virtualenv and pip.
+
+```bash
+pip install biopython
+```
+
+
 ### Bowtie
 
 See http://bowtie-bio.sourceforge.net/index.shtml.
