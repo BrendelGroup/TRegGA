@@ -186,6 +186,7 @@ tar -xzf GapFiller_v1-10_linux-x86_64.tar.gz
 # We need to apply a small patch to the program so that it will work
 # with modern versions of Perl.
 cd GapFiller_v1-10_linux-x86_64
+dos2unix GapFiller.pl
 cp GapFiller.pl GapFiller.plORIG
 patch GapFiller.plORIG -i $TRegGA_DIR/patches/gapfiller.patch -o GapFiller.pl
 chmod 755 GapFiller.pl
@@ -297,6 +298,10 @@ patch libs/gage.pyORIG -i $TRegGA_DIR/patches/quast.patch -o libs/gage.py
 python quast.py --gage --test
 python metaquast.py --test
 ```
+
+### R
+
+For installation instructions, see https://www.r-project.org.
 
 ### Samtools
 

@@ -10,5 +10,5 @@ shasum -c checksums.sha
 cd -
 
 cd targets/
-shasum -c checksums.embl
+shasum -c checksums.sha
 cd -
