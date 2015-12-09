@@ -13,7 +13,7 @@ done
 
 for program in AlignGraph Eval-AlignGraph art act dnaplotter bowtie bowtie2 \
                bwa entret fastqc GapFiller.pl gth gt ngsutils samtools \
-               SOAPdenovo-63mer SOAPdenovo-127mer fastq-dump; do
+               SOAPdenovo-63mer SOAPdenovo-127mer fastq-dump Rscript; do
     echo -n "[TRegGA] Third-party program $program ... "
     which $program > /dev/null 2>&1
     returnstatus=$?
