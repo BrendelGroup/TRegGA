@@ -1,0 +1,12 @@
+1c1
+< #!/usr/bin/perl
+---
+> #!/usr/bin/env perl
+44a45
+>   use Getopt::Std;
+51d51
+<    require "getopts.pl";
+54c54
+<   &Getopts('m:o:v:p:k:a:z:s:b:n:l:x:u:t:T:g:r:d:S:i:');
+---
+>   &getopts('m:o:v:p:k:a:z:s:b:n:l:x:u:t:T:g:r:d:S:i:');

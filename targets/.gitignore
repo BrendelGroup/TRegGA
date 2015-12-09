@@ -1,1 +1,5 @@
 Os?CHR*.embl
+*.embl
+*.fasta
+*.gff3
+0Record-*
