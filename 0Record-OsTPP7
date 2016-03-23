@@ -1,0 +1,94 @@
+##--------------------------
+# Gene: TPP7/qAG-9-2/T6P region [1]
+#[1] Kretzschmar T. et al., A trehalose-6-phosphate phosphatase enhances anaerobic germination tolerance in rice, Nature Plants, 1:1, Sept. 2015
+
+# Presence of OsTPP6
+# CX274 IR26 Philippines Indica
+# CX296 IR74 Philippines Indica
+
+# Absence of OsTPP7
+# CX403 IR64a Philippines Indica
+# CX73  IR6   Philippines Indica
+# CX161	IR42  Philippines Indica
+
+#
+#2) TPP7 at Nipponbare OS09G0369400
+#Description probable trehalose-phosphate phosphatase 7 [Source:UniProtKB/Swiss-Prot;Acc:Q6H5L4]
+#Location Chromosome 9: 12,251,875-12,254,061 forward strand. (2,186 bp)
+#About this transcript This transcript has 7 exons, is annotated with 10 domains and features, is associated with  variations and maps to 1 oligo probe.
+#Exons: 7 Coding exons: 7 Transcript length: 1,549 bps Translation length: 375 residues
+#
+#TRegGA-TR: Nipponbare Chr9 12228202-12277768 (49,566 bp)
+#TRegGA-CY: Nipponbare Chr9 12228001-12278000 (50,000 bp)
+
+#3) TPP7 at Indica  BGIOSGA030626
+#Description Putative uncharacterized protein [Source:UniProtKB/TrEMBL;Acc:A2Z0I3]
+#Location Chromosome 9: 10,727,366-10,729,114 forward strand.
+#About this gene This gene has 1 transcript (splice variant), 72 orthologues and 10 paralogues.
+#Exons: 7 Coding exons: 7 Transcript length: 1,128 bps Translation length: 375 residues
+#Coordinates for assembly: Chr9 10700001-10750000 (50,000 bp)
+
+##---------------------------
+#4) prepare the targets
+TRegGA_DIR=/N/dc2/projects/brendelgroup/huangcy/TRegGA
+SRCDIR=/N/dc2/projects/brendelgroup/TRegGA/src
+EMAIL="huangcy@indiana.edu"
+WALLTIME=30
+CHECKONLY=no
+NUMPROC=30
+
+
+CULTIVAR="IR26"
+SYNONYM="IR26"
+
+CULTIVAR="IR74"
+SYNONYM="IR74"
+
+CULTIVAR="IR64a"
+SYNONYM="IR64"
+
+TARGET=OsiTPP7
+REFERENCE=OsiCHR9
+FROM=12228001
+TO=12278000
+
+
+##--------------------------
+echo "
+#!/bin/bash
+#PBS -m abe
+#PBS -l nodes=1:ppn=30,vmem=500gb,walltime=${WALLTIME}:00:00
+#PBS -M ${EMAIL}
+#PBS -N TRegGA_${SYNONYM}-on-${TARGET}
+#PBS -j oe
+
+module add bowtie/1.1.1
+module add bowtie2/2.2.3
+module add bwa/0.7.6a
+module add java
+module add python
+module add R
+module add ngsutils
+module add samtools
+module add soapdenovo2
+
+
+TRegGA_DIR=${TRegGA_DIR}
+source ${TRegGA_DIR}/TRegGA.source
+cd ${TRegGA_DIR}
+
+make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=$\
+{SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig >& err_${SYNO\
+NYM}-on-${TARGET}
+
+##---------------------------
+# Traverse to ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION for the assembly results.
+# The assembly results can be visually evaluated against the target using the Artemis Comparson Tool (ACT):
+# ${SRCDIR}/PAGIT/PAGIT/bin/act ${TARGET}.embl blastn.out ${SYNONYM}-${TARGET}.embl
+# The gene structure predictions of the assembly by GenomeThreader can be found in the file gth.OsjPRT-on-${S\
+YNONYM}-${TARGET}.
+
+" > qsub_TRegGA_${SYNONYM}-on-${TARGET}
+
+# qsub qsub_TRegGA_${SYNONYM}-on-${TARGET}
+# qsub -W depend=afterok:xxxxxx.m1.mason qsub_TRegGA_${SYNONYM}-on-${TARGET}
