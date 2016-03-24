@@ -1,6 +1,7 @@
 #!/bin/tcsh
 
-set repository = /N/dc2/projects/brendelgroup/TRegGA/prj
+set repository = /home/huangcy/MYWORK/TRegGA
+#set repository = /N/dc2/projects/brendelgroup/TRegGA/prj
 #set repository = /N/dc2/scratch/vbrendel/TRegGA
 set mythome    = `pwd`
 
