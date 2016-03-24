@@ -6,7 +6,7 @@
 # Programs and executables variables for the makefiles
 # ------------------------------------------------------------------------------
 
-TRegGA_DIR         = /home/huangcy/TRegGA_CY/prj_TRG15git
+TRegGA_DIR         = /home/huangcy/MYGIT/TRegGA
 SRCDIR            = /usr/local/src/NGS-DIR
 SRATOOLKIT        = ${SRCDIR}/SRATOOLKIT/sratoolkit.2.5.2-centos_linux64/bin
 FASTQC            = ${SRCDIR}/FASTQC/FastQC
