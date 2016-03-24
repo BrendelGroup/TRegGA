@@ -1,4 +1,0 @@
-TRegGA_DIR=/home/TRegGA
-KMERGENIE_DIR=/home/TRegGA/local/src/kmergenie-1.6950
-TRIMMOMATIC=/home/TRegGA/local/src/Trimmomatic-0.33/trimmomatic-0.33.jar
-ADAPTORS=/home/TRegGA/local/src/Trimmomatic-0.33/adapters
