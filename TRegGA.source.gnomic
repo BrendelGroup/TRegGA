@@ -11,6 +11,7 @@
 
 TRegGA_DIR=`pwd`
 SRCDIR=/usr/local/src/NGS-DIR
+export PATH=$PATH:/usr/local/bin
 export PATH=$PATH:${SRCDIR}/BOWTIE/bowtie
 export PATH=$PATH:${SRCDIR}/BOWTIE2/bowtie2-2.2.5
 export PATH=$PATH:${SRCDIR}/BWA/bwa-0.7.12
