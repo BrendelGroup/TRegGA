@@ -28,9 +28,10 @@ set -eo pipefail
 
 ##---------------------------
 TRegGA_DIR=`pwd`
-source ${TRegGA_DIR}/TRegGA.source
 #EMAIL="youremail@indiana.edu"
 WALLTIME=24
+VMEM=500
+PPN=30
 CHECKONLY=no
 NUMPROC=30
 CULTIVAR='\"Zhengshan97\"'
@@ -44,7 +45,7 @@ TO=17315000
 echo "
 #!/bin/bash
 #PBS -m abe
-#PBS -l nodes=1:ppn=30,vmem=500gb,walltime=${WALLTIME}:00:00
+#PBS -l nodes=1:ppn=${PPN},vmem=${VMEM}gb,walltime=${WALLTIME}:00:00
 #PBS -M ${EMAIL}
 #PBS -N TRegGA_${SYNONYM}-on-${TARGET}
 #PBS -j oe
@@ -61,11 +62,22 @@ module add soapdenovo2
 
 
 TRegGA_DIR=${TRegGA_DIR}
-source ${TRegGA_DIR}/TRegGA.source
+source ${TRegGA_DIR}/TRegGA.config
 source ${SRCDIR}/PAGIT/PAGIT/sourceme.pagit
 cd ${TRegGA_DIR}
 
+# For the read prep and no more.
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} -f Makefile_TRegGA-orig ${TRegGA_DIR}/reads/${SYNONYM}/${SYNONYM}_1.fa >& err_${SYNONYM}-reads
+
+# For the read prep and denovo assembly and no more.
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} -f Makefile_TRegGA-orig ${TRegGA_DIR}/assembly/denovo/${SYNONYM}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa >& err_${SYNONYM}-denovo
+
+# For the target prep only
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig ${TRegGA_DIR}/targets/${TARGET}.embl >& err_${SYNONYM}-TargetPrep-${TARGET}
+
+# For the entire workflow
 make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig >& err_${SYNONYM}-on-${TARGET}
+
 
 ##---------------------------
 # Traverse to ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION for the assembly results.
@@ -95,5 +107,4 @@ make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} C
 # find . -path "*GF/alignoutput" -type d | xargs -I {} \rm -r {}
 # find . -path "*GF/reads" -type d | xargs -I {} \rm -r {}
 
-" > qsub_TRegGA_${SYNONYM}-on-${TARGET}-test
-
+" > qsub_TRegGA_${SYNONYM}-on-${TARGET}
