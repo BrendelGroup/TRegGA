@@ -10,7 +10,7 @@
 # Corresponding source code distributions can be found in the `src` directory.
 
 
-TRegGA_DIR=/home/huangcy/TRegGA_CY/prj_TRG15git
+TRegGA_DIR=`pwd`
 SRCDIR=/usr/local/src/NGS-DIR
 export PATH=$PATH:${SRCDIR}/BOWTIE/bowtie
 export PATH=$PATH:${SRCDIR}/BOWTIE2/bowtie2-2.2.5
