@@ -18,3 +18,4 @@ QUAST             = ${SRCDIR}/QUAST/quast-2.3
 GAPFILLER_DIR     = ${SRCDIR}/GAPFILLER/GapFiller_v1-10_linux-x86_64
 ALIGNGRAPH        = ${SRCDIR}/AlignGraph/AlignGraph/AlignGraph
 PAGIT_DIR         = ${SRCDIR}/PAGIT/PAGIT
+
