@@ -40,7 +40,7 @@ TARGET=OsjSWEET13
 REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
-MODULES=`cat xloadmodule`
+MODULES=`cat xloadmodules`
 
 ##--------------------------
 echo "
