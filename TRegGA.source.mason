@@ -10,7 +10,7 @@
 # Corresponding source code distributions can be found in the `src` directory.
 
 
-TRegGA_DIR=/N/dc2/projects/brendelgroup/TRegGA/TRegGA_v1
+TRegGA_DIR=`pwd`
 SRCDIR=/N/dc2/projects/brendelgroup/TRegGA/src
 export PATH=/N/dc2/projects/brendelgroup/TRegGA/bin:$PATH
 export PATH=${SRCDIR}/EMBOSS/EMBOSS-6.6.0/emboss:$PATH
