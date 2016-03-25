@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eo pipefail
 
-source ./TRegGA.source
+TRegGA_DIR=`pwd`
+source ${TRegGA_DIR}/TRegGA.source
 
 ##-------------------------
 ## TRegGA-INSTALL contains general installation instructions for the programs used by TRegGA.
