@@ -6,7 +6,7 @@
 # Programs and executables variables for the makefiles
 # ------------------------------------------------------------------------------
 
-TRegGA_DIR        = /N/dc2/projects/brendelgroup/TRegGA/TRegGA_v1
+TRegGA_DIR         = $(shell pwd)
 SRCDIR            = /N/dc2/projects/brendelgroup/TRegGA/src
 SRATOOLKIT        = ${SRCDIR}/SRATOOLKIT/sratoolkit.2.5.2-centos_linux64/bin
 FASTQC            = ${SRCDIR}/FASTQC/FastQC
@@ -19,20 +19,4 @@ GAPFILLER_DIR     = ${SRCDIR}/GAPFILLER/GapFiller_v1-10_linux-x86_64
 ALIGNGRAPH        = ${SRCDIR}/ALIGNGRAPH/AlignGraph/AlignGraph
 PAGIT_DIR         = ${SRCDIR}/PAGIT/PAGIT
 SOAP_DIR          = /N/soft/rhel6/soapdenovo/r240
-
-
-# Modules
-# Usage: uncomment the following modules and include them in the qsub file
-# ------------------------------------------------------------------------------
-
-# module add gcc
-# module add bowtie/1.1.1
-# module add bowtie2/2.2.3
-# module add bwa/0.7.6a
-# module add java
-# module add python
-# module add R
-# module add ngsutils
-# module add soapdenovo2
-# module add samtools
 
