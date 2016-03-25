@@ -27,7 +27,7 @@ set -eo pipefail
 # We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
 
 ##---------------------------
-TRegGA_DIR=/N/dc2/projects/brendelgroup/TRegGA/TRegGA_v1
+TRegGA_DIR=`pwd`
 source ${TRegGA_DIR}/TRegGA.source
 #EMAIL="youremail@indiana.edu"
 WALLTIME=24
