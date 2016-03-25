@@ -40,7 +40,6 @@ TARGET=OsjSWEET13
 REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
-MODULES=`cat xloadmodules`
 
 ##--------------------------
 echo "
@@ -51,8 +50,11 @@ echo "
 #PBS -N TRegGA_${SYNONYM}-on-${TARGET}
 #PBS -j oe
 
-${MODULES}
+" > qsub_TRegGA_${SYNONYM}-on-${TARGET}
 
+cat ${TRegGA_DIR}/xloadmodules >> qsub_TRegGA_${SYNONYM}-on-${TARGET}
+
+echo "
 TRegGA_DIR=${TRegGA_DIR}
 source ${TRegGA_DIR}/TRegGA.source
 source ${SRCDIR}/PAGIT/PAGIT/sourceme.pagit
@@ -99,5 +101,5 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SY
 # find . -path "*GF/alignoutput" -type d | xargs -I {} \rm -r {}
 # find . -path "*GF/reads" -type d | xargs -I {} \rm -r {}
 
-" > qsub_TRegGA_${SYNONYM}-on-${TARGET}
+" >> qsub_TRegGA_${SYNONYM}-on-${TARGET}
 
