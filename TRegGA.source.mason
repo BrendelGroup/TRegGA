@@ -22,3 +22,4 @@ export PATH=${SRCDIR}/GENOMETHREADER/gth-1.6.5-Linux_x86_64-64bit/bin:$PATH
 # The PAGIT package includes a script that must be placed in the user's .bashrc
 # file for PAGIT to work properly.
 # source /N/dc2/projects/brendelgroup/TRegGA/src/PAGIT/PAGIT/sourceme.pagit
+
