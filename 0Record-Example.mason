@@ -109,3 +109,4 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SY
 # find . -path "*GF/reads" -type d | xargs -I {} \rm -r {}
 
 " > qsub_TRegGA_${SYNONYM}-on-${TARGET}
+
