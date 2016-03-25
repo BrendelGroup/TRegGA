@@ -2,7 +2,6 @@
 # To be included in make file
 # Specific to gnomic.soic.indiana.edu
 
-
 # Programs and executables variables for the makefiles
 # ------------------------------------------------------------------------------
 TRegGA_DIR         = $(shell pwd)
