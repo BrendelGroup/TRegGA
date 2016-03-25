@@ -51,11 +51,6 @@ cd ${TRegGA_DIR}
 # ${SRCDIR}/PAGIT/PAGIT/bin/act ${TARGET}.embl blastn.out ${SYNONYM}-${TARGET}.embl
 # The gene structure predictions of the assembly by GenomeThreader can be found in the file gth.OsjPRT-on-${SYNONYM}-${TARGET}.
 ##---------------------------
-## To submit the job directly
-# qsub qsub_TRegGA_${SYNONYM}-on-${TARGET}
-## To submit the job that depends on the finish of another job with Job_Id 123456.m1.mason
-# qsub -W depend=afterok:123456.m1.mason qsub_TRegGA_${SYNONYM}-on-${TARGET}
-##----------------------------
 ## To clean up files after the job is done
 # cd ${TRegGA_DIR}/reads/${SYNONYM}
 # make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_GPR_${SYNONYM} cleanup
