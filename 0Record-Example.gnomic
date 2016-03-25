@@ -35,10 +35,38 @@ TO=17315000
 ##--------------------------
 source ./TRegGA.source
 cd ${TRegGA_DIR}
-make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig >& err_${SYNONYM}-on-${TARGET}
+
+# For the read prep and no more.
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} -f Makefile_TRegGA-orig ${TRegGA_DIR}/reads/${SYNONYM}/${SYNONYM}_1.fa >& err_${SYNONYM}-reads
+# For the read prep and denovo assembly and no more.
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} -f Makefile_TRegGA-orig ${TRegGA_DIR}/assembly/denovo/${SYNONYM}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa >& err_${SYNONYM}-denovo
+# For the target prep only
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig ${TRegGA_DIR}/targets/${TARGET}.embl >& err_${SYNONYM}-TargetPrep-${TARGET}
+# For the entire workflow
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig >& err_${SYNONYM}-on-${TARGET}
 
 ##---------------------------
 # Traverse to ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION for the assembly results.
 # The assembly results can be visually evaluated against the target using the Artemis Comparson Tool (ACT):
 # ${SRCDIR}/PAGIT/PAGIT/bin/act ${TARGET}.embl blastn.out ${SYNONYM}-${TARGET}.embl
 # The gene structure predictions of the assembly by GenomeThreader can be found in the file gth.OsjPRT-on-${SYNONYM}-${TARGET}.
+##---------------------------
+## To submit the job directly
+# qsub qsub_TRegGA_${SYNONYM}-on-${TARGET}
+## To submit the job that depends on the finish of another job with Job_Id 123456.m1.mason
+# qsub -W depend=afterok:123456.m1.mason qsub_TRegGA_${SYNONYM}-on-${TARGET}
+##----------------------------
+## To clean up files after the job is done
+# cd ${TRegGA_DIR}/reads/${SYNONYM}
+# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_GPR_${SYNONYM} cleanup
+# cd ${TRegGA_DIR}/assembly/denovo/${SYNONYM}
+# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_denovo_${SYNONYM} cleanup
+# cd ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}
+# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_RGA_${SYNONYM}-on-${TARGET} cleanup
+##-----------------------------
+## To clean up files for all jobs under ${TRegGA_DIR}
+# cd ${TRegGA_DIR}
+# find . -path "*ALG/tmp" -type d | xargs -I {} \rm -r {}
+# find . -path "*GF/alignoutput" -type d | xargs -I {} \rm -r {}
+# find . -path "*GF/reads" -type d | xargs -I {} \rm -r {}
+
