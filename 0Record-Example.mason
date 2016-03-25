@@ -63,7 +63,7 @@ module add soapdenovo2
 
 
 TRegGA_DIR=${TRegGA_DIR}
-source ${TRegGA_DIR}/TRegGA.config
+source ${TRegGA_DIR}/TRegGA.source
 source ${SRCDIR}/PAGIT/PAGIT/sourceme.pagit
 cd ${TRegGA_DIR}
 
