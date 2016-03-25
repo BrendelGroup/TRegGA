@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eo pipefail
+source ./TRegGA.source
+
+##-------------------------
+## TRegGA-INSTALL contains general installation instructions for the programs used by TRegGA.
+# TRegGA.config contains TRegGA runtime configuration for program locations that needs to be included into makefiles. 
+# TRegGA.config.gnomic is specific to gnomic.soic.indiana.edu, and should replace TRegGA.config before TRegGA execution.
+# TRegGA.source contains TRegGA runtime configuration for program locations that needs to be included into shell environment. 
+# TRegGA.source.gnomic is specific to gnomic.soic.indiana.edu, and should replace TRegGA.source before TRegGA execution.
+
+##---------------------------
+## Example for executing job on gnomic.soic.indiana.edu
+# Assembly of the SWEET13 locus using Zhengshan97 reads against the rice Japonica Nipponbare reference genome.
+# Source: http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01
+# SWEET13 description: Bidirectional sugar transporter [Source:UniProtKB/Swiss-Prot;Acc:Q2QR07]
+# SWEET13 (Xa25/xa25, Os12N3) gene ID in Oryza sativa Japonica: OS12G0476200.
+# SWEET13 coding exons: 6. Transcript length: 1,653bp. Protein residues: 296aa.
+# Oryza sativa Japonica chromosome 12: 17,302,127-17,305,326 reverse strand.
+# We recommed adding 10 Kb to the borders of the interested region as the final target to increase the specificity of the reference-guided assembly.
+# We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
+
+##---------------------------
+CHECKONLY=no
+NUMPROC=4
+CULTIVAR='\"Zhengshan97\"'
+SYNONYM="ZHENGSHAN97"
+TARGET=OsjSWEET13
+REFERENCE=OsjCHR12
+FROM=17292001
+TO=17315000
+
+##--------------------------
+source ./TRegGA.source
+cd ${TRegGA_DIR}
+make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig >& err_${SYNONYM}-on-${TARGET}
+
+##---------------------------
+# Traverse to ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION for the assembly results.
+# The assembly results can be visually evaluated against the target using the Artemis Comparson Tool (ACT):
+# ${SRCDIR}/PAGIT/PAGIT/bin/act ${TARGET}.embl blastn.out ${SYNONYM}-${TARGET}.embl
+# The gene structure predictions of the assembly by GenomeThreader can be found in the file gth.OsjPRT-on-${SYNONYM}-${TARGET}.
