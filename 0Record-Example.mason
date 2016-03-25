@@ -40,6 +40,7 @@ TARGET=OsjSWEET13
 REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
+MODULES=`cat xloadmodule`
 
 ##--------------------------
 echo "
@@ -50,17 +51,7 @@ echo "
 #PBS -N TRegGA_${SYNONYM}-on-${TARGET}
 #PBS -j oe
 
-module add gcc
-module add bowtie/1.1.1
-module add bowtie2/2.2.3
-module add bwa/0.7.6a
-module add java
-module add python
-module add R
-module add ngsutils
-module add samtools
-module add soapdenovo2
-
+${MODULES}
 
 TRegGA_DIR=${TRegGA_DIR}
 source ${TRegGA_DIR}/TRegGA.source
