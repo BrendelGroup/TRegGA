@@ -33,7 +33,6 @@ FROM=17292001
 TO=17315000
 
 ##--------------------------
-source ./TRegGA.source
 cd ${TRegGA_DIR}
 
 # For the read prep and no more.
