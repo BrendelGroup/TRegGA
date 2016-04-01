@@ -14,5 +14,5 @@ cd targets/
 cd -
 
 cd reads/
-gunzip -f -k seq_file_mapping_to_SRA.txt.gz
+gunzip -f seq_file_mapping_to_SRA.txt.gz
 cd -
