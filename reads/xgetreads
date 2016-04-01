@@ -31,10 +31,10 @@ echo "# Cultivar (DNA_VARNAME) name:	$cultivar"
 echo ""
 echo "#Description (from file rice_line_metadata_20140521.tsv):"
 echo ""
-egrep "	$cultivar	" *tsv
+egrep "$cultivar" *tsv
 echo ""
 
-sample=`egrep "	$cultivar	" *tsv | cut -d"	" -f1`
+sample=`egrep "$cultivar" *tsv | cut -d"	" -f1`
 echo "Sample (sample_alias) name:	$sample"
 
 echo ""
