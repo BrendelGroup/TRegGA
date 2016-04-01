@@ -27,7 +27,7 @@ set -eo pipefail
 # We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
 
 ##---------------------------
-TRegGA_DIR=`pwd`
+TRegGA_DIR=$(pwd)
 EMAIL="youremail@indiana.edu"
 WALLTIME=24
 VMEM=500
