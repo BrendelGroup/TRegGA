@@ -88,11 +88,11 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SY
 ##----------------------------
 ## To clean up files after the job is done
 # cd ${TRegGA_DIR}/reads/${SYNONYM}
-# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_GPR_${SYNONYM} cleanup
+# make -f Makefile_GPR_${SYNONYM} cleanup
 # cd ${TRegGA_DIR}/assembly/denovo/${SYNONYM}
-# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_denovo_${SYNONYM} cleanup
+# make -f Makefile_denovo_${SYNONYM} cleanup
 # cd ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}
-# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_RGA_${SYNONYM}-on-${TARGET} cleanup
+# make -f Makefile_RGA_${SYNONYM}-on-${TARGET} cleanup
 
 ##-----------------------------
 ## To clean up files for all jobs under ${TRegGA_DIR}
