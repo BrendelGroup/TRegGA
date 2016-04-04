@@ -74,6 +74,6 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR='${CULTIVAR}' SYNONYM=${
 # find . -path "*GF/reads" -type d | xargs -I {} \rm -r {}
 
 
-" > TRegGA_${SYNONYM}-denovo.sh
+" > TRegGA_${SYNONYM}-on-${TARGET}.sh
 
 
