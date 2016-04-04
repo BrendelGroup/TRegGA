@@ -25,7 +25,7 @@ source ${TRegGA_DIR}/TRegGA.source
 ##---------------------------
 CHECKONLY=no
 NUMPROC=4
-CULTIVAR="Zhengshan97"
+CULTIVAR='\"Zhengshan97\"'
 SYNONYM="ZHENGSHAN97"
 TARGET=OsjSWEET13
 REFERENCE=OsjCHR12
