@@ -23,6 +23,8 @@ source ${TRegGA_DIR}/TRegGA.source
 # We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
 
 ##---------------------------
+TRegGA_DIR=$(pwd)
+source ./TRegGA.source
 CHECKONLY=no
 NUMPROC=4
 CULTIVAR='\"Zhengshan97\"'
@@ -33,6 +35,13 @@ FROM=17292001
 TO=17315000
 
 ##--------------------------
+echo "
+#!/bin/sh
+set -eo pipefail
+
+TRegGA_DIR=${TRegGA_DIR}
+source ${TRegGA_DIR}/TRegGA.source
+source ${SRCDIR}/PAGIT/PAGIT/sourceme.pagit
 cd ${TRegGA_DIR}
 
 # For the read prep and no more.
@@ -63,4 +72,8 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR='${CULTIVAR}' SYNONYM=${
 # find . -path "*ALG/tmp" -type d | xargs -I {} \rm -r {}
 # find . -path "*GF/alignoutput" -type d | xargs -I {} \rm -r {}
 # find . -path "*GF/reads" -type d | xargs -I {} \rm -r {}
+
+
+" > TRegGA_${SYNONYM}-denovo.sh
+
 
