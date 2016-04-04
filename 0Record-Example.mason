@@ -28,6 +28,7 @@ set -eo pipefail
 
 ##---------------------------
 TRegGA_DIR=$(pwd)
+source ./TRegGA.source
 EMAIL="youremail@indiana.edu"
 WALLTIME=24
 VMEM=500
