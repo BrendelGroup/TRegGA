@@ -5,7 +5,7 @@
 # Programs and executables variables for the makefiles
 # ------------------------------------------------------------------------------
 
-TRegGA_DIR         = $(shell pwd)
+TRegGA_DIR         = /N/dc2/projects/brendelgroup/TRegGA/TRegGA_v1
 SRCDIR            = /N/dc2/projects/brendelgroup/TRegGA/src
 SRATOOLKIT        = ${SRCDIR}/SRATOOLKIT/sratoolkit.2.5.2-centos_linux64/bin
 FASTQC            = ${SRCDIR}/FASTQC/FastQC
