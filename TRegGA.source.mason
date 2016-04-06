@@ -9,8 +9,8 @@
 # variable in your ~/.bash_profile  before running the TRegGA pipeline.
 # Corresponding source code distributions can be found in the `src` directory.
 
-TRegGA_DIR=/N/dc2/projects/brendelgroup/TRegGA/TRegGA_v1
-SRCDIR=/N/dc2/projects/brendelgroup/TRegGA/src
+TRegGA_DIR=YOUR_WORK_DIR
+SRCDIR=YOUR_SRC_DIR
 export PATH=/N/dc2/projects/brendelgroup/TRegGA/bin:$PATH
 export PATH=${SRCDIR}/EMBOSS/EMBOSS-6.6.0/emboss:$PATH
 export PATH=${SRCDIR}/GENOMETOOLS/genometools-1.5.6/bin:$PATH
