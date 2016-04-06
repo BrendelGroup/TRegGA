@@ -1,0 +1,18 @@
+#!/bin/tcsh
+
+set repository = YOUR_REPO_DIR
+set mythome    = `pwd`
+
+
+foreach directory ( assembly/denovo assembly/rfguided reads reference targets )
+  cd $directory
+  foreach file ($repository/$directory/*)
+    set lfile = `basename $file`
+    if ( ! -e $lfile ) then
+       ln -s $file
+    endif
+  end
+  cd $mythome
+
+end
+
