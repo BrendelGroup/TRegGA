@@ -40,6 +40,8 @@ set -eo pipefail
 # SWEET13 coding exons: 6. Transcript length: 1,653bp. Protein residues: 296aa.
 # We recommed adding 10 Kb to the borders of the interested region as the final target to increase the specificity of the reference-guided assembly.
 # We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
+# Final makefile command looks like this:
+# make CHECKONLY=no NUMPROC=30 CULTIVAR='\"Zhengshan97\"' SYNONYM=ZHENGSHAN97 TARGET=OsjSWEET13 REFERENCE=OsjCHR12 FROM=17292001 TO=17315000 -f Makefile_TRegGA-orig >& err_ZHENGSHAN97-on-OsjSWEET13
 
 ##---------------------------
 TRegGA_DIR=$(pwd)
@@ -100,9 +102,6 @@ TARGET=OsjSWEET13
 REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
-
-# Final makefile command looks like this:
-# make CHECKONLY=no NUMPROC=30 CULTIVAR='\"Zhengshan97\"' SYNONYM=ZHENGSHAN97 TARGET=OsjSWEET13 REFERENCE=OsjCHR12 FROM=17292001 TO=17315000 -f Makefile_TRegGA-orig >& err_ZHENGSHAN97-on-OsjSWEET13
 
 ##--------------------------
 ## Generate runTRegGA script for each sample in TRegGA.sample 
