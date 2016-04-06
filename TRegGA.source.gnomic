@@ -9,8 +9,8 @@
 # variable in your ~/.bash_profile  before running the TRegGA pipeline.
 # Corresponding source code distributions can be found in the `src` directory.
 
-TRegGA_DIR=/home/huangcy/MYGIT/TRegGA
-SRCDIR=/usr/local/src/NGS-DIR
+TRegGA_DIR=YOUR_WORK_DIR
+SRCDIR=YOUR_SRC_DIR
 export PATH=$PATH:/usr/local/bin
 export PATH=$PATH:${SRCDIR}/BOWTIE/bowtie
 export PATH=$PATH:${SRCDIR}/BOWTIE2/bowtie2-2.2.5
