@@ -5,8 +5,8 @@
 # Programs and executables variables for the makefiles
 # ------------------------------------------------------------------------------
 
-TRegGA_DIR         = /N/dc2/projects/brendelgroup/TRegGA/TRegGA_v1
-SRCDIR            = /N/dc2/projects/brendelgroup/TRegGA/src
+TRegGA_DIR         = YOUR_WORK_DIR
+SRCDIR            = YOUR_SRC_DIR
 SRATOOLKIT        = ${SRCDIR}/SRATOOLKIT/sratoolkit.2.5.2-centos_linux64/bin
 FASTQC            = ${SRCDIR}/FASTQC/FastQC
 TRIMMOMATIC       = ${SRCDIR}/TRIMMOMATIC/Trimmomatic-0.33/trimmomatic-0.33.jar
