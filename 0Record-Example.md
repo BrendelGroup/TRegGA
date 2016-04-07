@@ -10,7 +10,7 @@
 - [ ] Configure `TRegGA.source` for program locations that needs to be included into shell environment
 - [ ] Setup `TRegGA.sample` as explained below
 - [ ] Run TRegGA as explained in `VIGNETTE.txt`
-- [ ] Alternatively, use `0Record-Example.run` to generate `runTRegGA*`, then submit `runTRegGA*` for TRegGA.  
+- [ ] Alternatively, use `0Record-Example.run` to generate `runTRegGA*`, then submit `runTRegGA*`.  
 
 ### Use case of TRegGA
 * Assembly of the SWEET13 locus using reads from cultivar Zhengshan97 against the rice Japonica Nipponbare reference genome.
@@ -63,7 +63,7 @@ CX140|NIPPONBARE
 IRIS 313-11356|CR441" > TRegGA.sample
 ```
 
-### Run `0Record-Example.run` to generate `runTRegGA`
+### Use `0Record-Example.run` to generate `runTRegGA`
 * `0Record-Example.run` takes a list of samples in `TRegGA.sample`, and then generate subscripts `runTRegGA`, for TRegGA job submitting.
 * `0Record-Example.run` generate qsub version of runTRegGA that is suitable for HPS TORQUE environment, such as mason.indiana.edu
 * Modify `0Record-Example.run` into shell version for Linux shell environment, such as gnomic.soic.indiana.edu    
@@ -85,7 +85,7 @@ grep -v "^module" tmp > runTRegGA_${SYNONYM}-on-${TARGET}
 done
 ```
 
-### Run runTRegGA
+### Submit runTRegGA
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
