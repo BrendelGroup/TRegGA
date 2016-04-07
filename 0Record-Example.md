@@ -16,8 +16,7 @@
 * Assembly of the SWEET13 locus using reads from cultivar Zhengshan97 against the rice Japonica Nipponbare reference genome.
 * [SWEET13](http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01) (Xa25/xa25, Os12N3) Bidirectional sugar transporter. Gene ID in Oryza sativa Japonica: OS12G0476200, chromosome 12: 17,302,127-17,305,326 reverse strand.
 * We recommed adding 10 Kb to the borders of the interested region as the final target to increase the specificity of the reference-guided assembly.
-* We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
-* Final makefile command looks like this:
+* We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example. The final makefile command looks like this:
 ```
 make CHECKONLY=no NUMPROC=30 CULTIVAR='\"Zhengshan97\"' SYNONYM=ZHENGSHAN97 TARGET=OsjSWEET13 REFERENCE=OsjCHR12 FROM=17292001 TO=17315000 -f Makefile_TRegGA-orig >& err_ZHENGSHAN97-on-OsjSWEET13
 ```
