@@ -1,9 +1,6 @@
-#!/bin/sh
-set -eo pipefail
-
 ##---------------------------
 ## CHECKLIST prior to running TRegGA:
-#1. Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
+1. Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
 #2. Install the required softwares as described in INSTALL.md
 #3. Optional: setup the required modules to run in HPC environment such as Mason with xloadmodules
 #4. Check for any missing softwares with check-prereqs.sh 
@@ -98,6 +95,11 @@ do
 head -$k TRegGA.sample | tail -1 > rec
 CULTIVAR=`cut -d "|" -f1 rec`
 SYNONYM=`cut -d "|" -f2 rec`
+
+echo "
+#!/bin/sh
+set -eo pipefail
+" > runTRegGA_${SYNONYM}-on-${TARGET}
 
 echo "
 #!/bin/bash
