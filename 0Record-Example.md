@@ -22,8 +22,8 @@ make CHECKONLY=no NUMPROC=30 CULTIVAR='\"Zhengshan97\"' SYNONYM=ZHENGSHAN97 TARG
 ```
 ### Things to know about the cultivar name
 * The CULTIVAR argument must be in quotes (allowing spaces), such as `"KOTO OURA S 5"`. In order for the quotes to be taken up by the makefile properly, it is necessary to protect it as `'\"KOTO OURA S 5\"'`.
-* The CULTIVAR can be the cultivar VARNAME such as `KOTO OURA S 5`, or less confusingly, the cultivar UNIQUE_ID such as `IRIS 313-10712`.
-* The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as `IRIS 313-10712` could be presented as `IRIS_313-10712`, `KOTO OURA S 5` could be presented as `KOTO-OURA-S-5`.
+* The CULTIVAR can be the cultivar VARNAME such as `"KOTO OURA S 5"`, or less confusingly, the cultivar UNIQUE_ID such as `"IRIS 313-10712"`.
+* The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as `"IRIS 313-10712"` could be presented as `"IRIS_313-10712"`, or `"KOTO OURA S 5"` could be presented as `"KOTO-OURA-S-5"`.
 * User is advised to check/convert to the acceptable cultivar name prior to running TRegGA by validating it against this table `reads/rice_line_metadata_20140521.tsv`, or against the [IRRI Rice SNP-Seek Database](http://oryzasnp.org/iric-portal/_variety.zul) 
 * The SYNONYM argument should be one word, with no space, hyphen or dot, such as `KOTOOURAS5`. Word with underscore is acceptable, such as `KOTO_OURA_S_5`. 
 * The TARGET argument should uniquely identify the target specified by REFERENCE, FROM - TO range.
