@@ -5,11 +5,11 @@
 - [ ] Check for any missing softwares with check-prereqs.sh 
 - [ ] Configure TRegGA.config for software locations that needs to be included into makefiles
 - [ ] Install the requqired reference and datasets with setup.sh
-7. Check for any missing dataset with check-data.sh
-8. Optional: link reads and assemblies from other TRegGA repository to here with xlink
-9. Configure TRegGA.source for program locations that needs to be included into shell environment
-10. Setup TRegGA.sample as explained below
-11. Run TRegGA as explained in VIGNETTE.txt. Alternatively, setup and run sub-scripts generated from this script.  
+- [ ] Check for any missing dataset with check-data.sh
+- [ ] Optional: link reads and assemblies from other TRegGA repository to here with xlink
+- [ ] Configure TRegGA.source for program locations that needs to be included into shell environment
+- [ ] Setup TRegGA.sample as explained below
+- [ ] Run TRegGA as explained in VIGNETTE.txt. Alternatively, setup and run sub-scripts generated from this script.  
 
 ### This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate scripts for TRegGA job submitting.
 * Input file: TRegGA.sample, formatted as: CULTIVAR|SYNONYM, One sample per row of the table.
