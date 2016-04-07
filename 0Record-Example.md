@@ -72,8 +72,6 @@ IRIS 313-11356|CR441" > TRegGA.sample
 ##### Block 1: TRegGA parameters 
 ```
 #!/bin/sh
-set -eo pipefail
-
 TRegGA_DIR=$(pwd)
 source ${TRegGA_DIR}/TRegGA.source
 EMAIL="youremail@indiana.edu"
