@@ -20,8 +20,8 @@
 ```
 make CHECKONLY=no NUMPROC=30 CULTIVAR='\"Zhengshan97\"' SYNONYM=ZHENGSHAN97 TARGET=OsjSWEET13 REFERENCE=OsjCHR12 FROM=17292001 TO=17315000 -f Makefile_TRegGA-orig >& err_ZHENGSHAN97-on-OsjSWEET13
 ```
-### Things to know about the Cultivar name
-* The CULTIVAR argument must be in quotes (allowing spaces).
+### Things to know about the cultivar name in 3,000 RGP
+* The CULTIVAR argument must be in quotes (allowing spaces), such as `"KOTO OURA S 5"`
 * The CULTIVAR can be the cultivar VARNAME such as `KOTO OURA S 5`, or less confusingly, the cultivar UNIQUE_ID such as `IRIS 313-10712`.
 * The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as `IRIS 313-10712` could be presented as `IRIS_313-10712`, `KOTO OURA S 5` could be presented as `KOTO-OURA-S-5`.
 * User is advised to check/convert to the acceptable cultivar name prior to running TRegGA by validating it against this table `reads/rice_line_metadata_20140521.tsv`, or against the [IRRI Rice SNP-Seek Database](http://oryzasnp.org/iric-portal/_variety.zul) 
