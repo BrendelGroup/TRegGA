@@ -13,7 +13,7 @@
 - [ ] Alternatively, setup and run sub-scripts `runTRegGA` generated from the following script.  
 
 ### Case use of TRegGA
-* Assembly of the SWEET13 locus using Zhengshan97 reads against the rice Japonica Nipponbare reference genome.
+* Assembly of the SWEET13 locus using reads from cultivar Zhengshan97 against the rice Japonica Nipponbare reference genome.
 * Target source: http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01
 * SWEET13 (Xa25/xa25, Os12N3) gene ID in Oryza sativa Japonica: OS12G0476200, chromosome 12: 17,302,127-17,305,326 reverse strand.
 * SWEET13 description: Bidirectional sugar transporter. Coding exons: 6. Transcript length: 1,653bp. Protein residues: 296aa.
