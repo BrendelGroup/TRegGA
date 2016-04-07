@@ -66,10 +66,10 @@ IRIS 313-11356|CR441" > TRegGA.sample
 
 ### Make runTRegGA
 * This script takes a list of samples in `TRegGA.sample`, and then generate sub-script, `runTRegGA`, for TRegGA job submitting.
-* use Blocks 1-2-3a-4 to generate shell script for Linux shell environment such as gnomic.soic.indiana.edu    
-* use Blocks 1-2-3b-4 to generate qsub script for HPS TORQUE environment such as mason.indiana.edu    
+* use qsub version for HPS TORQUE environment such as mason.indiana.edu    
+* use shell version for Linux shell environment such as gnomic.soic.indiana.edu    
 
-##### qsub script
+##### qsub version
 ```
 #!/bin/sh
 TRegGA_DIR=$(pwd)
@@ -149,7 +149,7 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR='\\\"${CULTIVAR}\\\"' SY
 done
 ```
 
-##### Shell script
+##### Shell ersion
 * Modify the above qsub script with:
 ```
 grep -v "^#PBS" runTRegGA_${SYNONYM}-on-${TARGET}
