@@ -69,7 +69,7 @@ IRIS 313-11356|CR441" > TRegGA.sample
 * use Blocks 1-2-3a-4 to generate shell script for Linux shell environment such as gnomic.soic.indiana.edu    
 * use Blocks 1-2-3b-4 to generate qsub script for HPS TORQUE environment such as mason.indiana.edu    
 
-##### Block 1: TRegGA parameters 
+##### Block 1
 ```
 #!/bin/sh
 TRegGA_DIR=$(pwd)
@@ -86,38 +86,32 @@ TARGET=OsjSWEET13
 REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
-```
-###### Block 2: iterator
-```
+
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
 do
 head -$k TRegGA.sample | tail -1 > rec
 CULTIVAR=`cut -d "|" -f1 rec`
 SYNONYM=`cut -d "|" -f2 rec`
-```
-###### Block 3a: shell header if run in Linux shell environment
-```
-echo "
-#!/bin/sh
-set -eo pipefail
-" > runTRegGA_${SYNONYM}-on-${TARGET}
-```
-###### Block 3b: qsub header if run in HPS TORQUE environment
-```
+
 echo "
 #!/bin/bash
+" > runTRegGA_${SYNONYM}-on-${TARGET}
+```
+###### Block 2: qsub header if run in HPS TORQUE environment
+```
+echo "
 #PBS -m abe
 #PBS -l nodes=1:ppn=${PPN},vmem=${VMEM}gb,walltime=${WALLTIME}:00:00
 #PBS -M ${EMAIL}
 #PBS -N TRegGA_${SYNONYM}-on-${TARGET}
 #PBS -j oe
 
-" > runTRegGA_${SYNONYM}-on-${TARGET}
+" >> runTRegGA_${SYNONYM}-on-${TARGET}
 
 cat ${TRegGA_DIR}/xloadmodules >> runTRegGA_${SYNONYM}-on-${TARGET}
 ```
-###### Block 4: main body
+###### Block 3: main body
 ```
 echo "
 TRegGA_DIR=${TRegGA_DIR}
