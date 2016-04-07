@@ -4,10 +4,10 @@
 - [ ] Optional: setup the required modules to run in HPS environment such as Mason with `xloadmodules`
 - [ ] Check for any missing softwares with `check-prereqs.sh` 
 - [ ] Configure `TRegGA.config` for software locations that needs to be included into makefiles
+- [ ] Configure `TRegGA.source` for program locations that needs to be included into shell environment
 - [ ] Install the requqired reference and datasets with `setup.sh`
 - [ ] Check for any missing dataset with `check-data.sh`
 - [ ] Optional: link reads and assemblies from other TRegGA repository to here with `xlink`
-- [ ] Configure `TRegGA.source` for program locations that needs to be included into shell environment
 - [ ] Setup `TRegGA.sample` as explained below
 - [ ] Run TRegGA as explained in `VIGNETTE.txt`
 - [ ] Alternatively, use `0Record-Example.run` to generate `runTRegGA*`, then submit `runTRegGA*`.  
@@ -40,6 +40,11 @@ SRCDIR=/usr/local/src/NGS-DIR
 sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.config.gnomic > TRegGA.config
 sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.config
 ```
+##### Update TRegGA_DIR in `TRegGA.source`
+```
+sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.source.gnomic > TRegGA.source
+sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.source
+```
 ##### Link to other TRegGA repository with `xlink`
 ```
 REPO=/home/huangcy/MYWORK/TRegGA
@@ -47,11 +52,6 @@ REPO=/home/huangcy/MYWORK/TRegGA
 # REPO=/N/dc2/scratch/vbrendel/TRegGA
 sed -e "s|YOUR_REPO_DIR|${REPO}|g" xlink-orig > xlink
 tcsh xlink
-```
-##### Update TRegGA_DIR in `TRegGA.source`
-```
-sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.source.gnomic > TRegGA.source
-sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.source
 ```
 ##### Setup `TRegGA.sample`
 * `TRegGA.sample` is a list of samples formatted as `CULTIVAR|SYNONYM`, one sample per row, such as:
@@ -72,7 +72,6 @@ IRIS 313-11356|CR441" > TRegGA.sample
 ```
 sh 0Record-Example.run
 ```
-
 ##### Generate shell version of runTRegGA
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
@@ -84,7 +83,6 @@ grep -v "^#PBS" runTRegGA_${SYNONYM}-on-${TARGET} > tmp
 grep -v "^module" tmp > runTRegGA_${SYNONYM}-on-${TARGET}
 done
 ```
-
 ### Submit runTRegGA
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
