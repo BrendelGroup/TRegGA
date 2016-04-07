@@ -69,7 +69,7 @@ IRIS 313-11356|CR441" > TRegGA.sample
 * use Blocks 1-2-3a-4 to generate shell script for Linux shell environment such as gnomic.soic.indiana.edu    
 * use Blocks 1-2-3b-4 to generate qsub script for HPS TORQUE environment such as mason.indiana.edu    
 
-##### Block 1
+##### qsub script
 ```
 #!/bin/sh
 TRegGA_DIR=$(pwd)
@@ -96,23 +96,15 @@ SYNONYM=`cut -d "|" -f2 rec`
 
 echo "
 #!/bin/bash
-" > runTRegGA_${SYNONYM}-on-${TARGET}
-```
-###### Block 2: qsub header if run in HPS TORQUE environment
-```
-echo "
 #PBS -m abe
 #PBS -l nodes=1:ppn=${PPN},vmem=${VMEM}gb,walltime=${WALLTIME}:00:00
 #PBS -M ${EMAIL}
 #PBS -N TRegGA_${SYNONYM}-on-${TARGET}
 #PBS -j oe
-
-" >> runTRegGA_${SYNONYM}-on-${TARGET}
+" > runTRegGA_${SYNONYM}-on-${TARGET}
 
 cat ${TRegGA_DIR}/xloadmodules >> runTRegGA_${SYNONYM}-on-${TARGET}
-```
-###### Block 3: main body
-```
+
 echo "
 TRegGA_DIR=${TRegGA_DIR}
 source ${TRegGA_DIR}/TRegGA.source
@@ -155,6 +147,13 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR='\\\"${CULTIVAR}\\\"' SY
 
 " >> runTRegGA_${SYNONYM}-on-${TARGET}
 done
+```
+
+##### Shell script
+* Modify the above qsub script with:
+```
+grep -v "^#PBS" runTRegGA_${SYNONYM}-on-${TARGET}
+grep -v "^module" runTRegGA_${SYNONYM}-on-${TARGET}
 ```
 
 ### Run runTRegGA
