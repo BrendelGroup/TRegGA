@@ -12,21 +12,8 @@
 - [ ] Run TRegGA as explained in VIGNETTE.txt. 
 - [ ] Alternatively, setup and run sub-scripts generated from the following script.  
 
-### runTRegGA
-* This script takes a list of `CULTIVAR|SYNONYM` of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
-* Input file: TRegGA.sample, formatted as: `CULTIVAR|SYNONYM`, one sample per row.
-* Output: shell/qsub sub-script runTRegGA that are suitable for multi-sample job submission.
-* The CULTIVAR argument must be in quotes (allowing spaces).
-* The CULTIVAR can be the cultivar VARNAME such as `KOTO OURA S 5`, or less confusingly, the cultivar UNIQUE_ID such as `IRIS 313-10712`.
-* The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as `IRIS 313-10712` could be presented as `IRIS_313-10712`, `KOTO OURA S 5` could be presented as `KOTO-OURA-S-5`.
-* User is advised to check/convert to the acceptable cultivar name prior to running TRegGA by validating it against this table `reads/rice_line_metadata_20140521.tsv`, or against the [Rice SNP-Seek Database from IRRI](http://oryzasnp.org/iric-portal/_variety.zul) 
-* The SYNONYM argument should be one word, with no space, hyphen or dot, such as `KOTOOURAS5`. Word with underscore is acceptable, such as `KOTO_OURA_S_5`. 
-* The TARGET argument should uniquely identify the target specified by REFERENCE, FROM - TO range.
-* If you want to change the range later, then use a different label or remove the existing TARGET.* files in subdirectory targets.
-
-### Example for TRegGA
+### Case use of TRegGA
 * Assembly of the SWEET13 locus using Zhengshan97 reads against the rice Japonica Nipponbare reference genome.
-* CULTIVAR: `Zhengshan97`, SYNONYM: `ZHENGSHAN97`.
 * Target source: http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01
 * SWEET13 (Xa25/xa25, Os12N3) gene ID in Oryza sativa Japonica: OS12G0476200, chromosome 12: 17,302,127-17,305,326 reverse strand.
 * SWEET13 description: Bidirectional sugar transporter. Coding exons: 6. Transcript length: 1,653bp. Protein residues: 296aa.
@@ -37,6 +24,15 @@
 make CHECKONLY=no NUMPROC=30 CULTIVAR='\"Zhengshan97\"' SYNONYM=ZHENGSHAN97 TARGET=OsjSWEET13 REFERENCE=OsjCHR12 FROM=17292001 TO=17315000 -f Makefile_TRegGA-orig >& err_ZHENGSHAN97-on-OsjSWEET13
 
 ```
+### Things to know about the Cultivar name
+* The CULTIVAR argument must be in quotes (allowing spaces).
+* The CULTIVAR can be the cultivar VARNAME such as `KOTO OURA S 5`, or less confusingly, the cultivar UNIQUE_ID such as `IRIS 313-10712`.
+* The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as `IRIS 313-10712` could be presented as `IRIS_313-10712`, `KOTO OURA S 5` could be presented as `KOTO-OURA-S-5`.
+* User is advised to check/convert to the acceptable cultivar name prior to running TRegGA by validating it against this table `reads/rice_line_metadata_20140521.tsv`, or against the [IRRI Rice SNP-Seek Database](http://oryzasnp.org/iric-portal/_variety.zul) 
+* The SYNONYM argument should be one word, with no space, hyphen or dot, such as `KOTOOURAS5`. Word with underscore is acceptable, such as `KOTO_OURA_S_5`. 
+* The TARGET argument should uniquely identify the target specified by REFERENCE, FROM - TO range.
+* If you want to change the range later, then use a different label or remove the existing TARGET.* files in subdirectory targets.
+
 ### TRegGA setup
 ```
 TRegGA_DIR=$(pwd)
@@ -90,6 +86,10 @@ FROM=17292001
 TO=17315000
 ```
 ### Generate runTRegGA script for each sample in TRegGA.sample 
+* This script takes a list of `CULTIVAR|SYNONYM` of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
+* Input file: TRegGA.sample, formatted as: `CULTIVAR|SYNONYM`, one sample per row.
+* Output: shell/qsub sub-script runTRegGA that are suitable for multi-sample job submission.
+
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
