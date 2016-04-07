@@ -86,8 +86,10 @@ FROM=17292001
 TO=17315000
 ```
 ##### Generate runTRegGA script for each sample in `TRegGA.sample` 
+* use Blocks 1-2a-3 to generate a shell script for Linux shell environment such as gnomic.soic.indiana.edu    
+* use Blocks 1-2b-3 to generate a qsub script for HPS TORQUE environment such as mason.indiana.edu    
 
-###### Block1: iterator
+###### Block 1: iterator
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
