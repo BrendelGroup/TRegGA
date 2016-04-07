@@ -55,6 +55,7 @@ sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.source.gnomic > TRegGA.source
 sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.source
 ```
 ##### Setup `TRegGA.sample`
+* TRegGA.sample, formatted as: `CULTIVAR|SYNONYM`, one sample per row.
 ```
 echo "Biniapan|BINIAPAN
 IRIS 313-10712|KOTOOURA
@@ -63,13 +64,9 @@ CX140|NIPPONBARE
 IRIS 313-11356|CR441" > TRegGA.sample
 ```
 
-
 ### runTRegGA script
 ##### Setup TRegGA parameters 
-* This script takes a list of `CULTIVAR|SYNONYM` of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
-* Input file: TRegGA.sample, formatted as: `CULTIVAR|SYNONYM`, one sample per row.
-* Output: shell/qsub sub-script runTRegGA that are suitable for multi-sample job submission.
-
+* This script takes a list of `CULTIVAR|SYNONYM` of samples in `TRegGA.sample`, and then generate sub-script, runTRegGA, for TRegGA job submitting.
 ```
 TRegGA_DIR=$(pwd)
 source ${TRegGA_DIR}/TRegGA.source
