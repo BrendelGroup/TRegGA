@@ -1,4 +1,4 @@
-### CHECKLIST prior to running TRegGA
+### Checklist prior to running TRegGA
 - [ ] Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
 - [ ] Install the required softwares as described in `INSTALL.md`
 - [ ] Optional: setup the required modules to run in HPC environment such as Mason with `xloadmodules`
