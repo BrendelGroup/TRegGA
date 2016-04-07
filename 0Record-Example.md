@@ -66,9 +66,10 @@ IRIS 313-11356|CR441" > TRegGA.sample
 
 ### Make runTRegGA
 * This script takes a list of `CULTIVAR|SYNONYM` of samples in `TRegGA.sample`, and then generate sub-script, `runTRegGA`, for TRegGA job submitting.
+* use Blocks 1-2-3a-4 to generate a shell script for Linux shell environment such as gnomic.soic.indiana.edu    
+* use Blocks 1-2-3b-4 to generate a qsub script for HPS TORQUE environment such as mason.indiana.edu    
 
-##### Setup TRegGA parameters 
-
+##### Block 1: TRegGA parameters 
 ```
 TRegGA_DIR=$(pwd)
 source ${TRegGA_DIR}/TRegGA.source
@@ -85,11 +86,7 @@ REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
 ```
-##### Generate runTRegGA script for each sample in `TRegGA.sample` 
-* use Blocks 1-2a-3 to generate a shell script for Linux shell environment such as gnomic.soic.indiana.edu    
-* use Blocks 1-2b-3 to generate a qsub script for HPS TORQUE environment such as mason.indiana.edu    
-
-###### Block 1: iterator
+###### Block 2: iterator
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
@@ -98,14 +95,14 @@ head -$k TRegGA.sample | tail -1 > rec
 CULTIVAR=`cut -d "|" -f1 rec`
 SYNONYM=`cut -d "|" -f2 rec`
 ```
-###### Block 2a: shell header if run in Linux shell environment
+###### Block 3a: shell header if run in Linux shell environment
 ```
 echo "
 #!/bin/sh
 set -eo pipefail
 " > runTRegGA_${SYNONYM}-on-${TARGET}
 ```
-###### Block 2b: qsub header if run in HPS TORQUE environment
+###### Block 3b: qsub header if run in HPS TORQUE environment
 ```
 echo "
 #!/bin/bash
@@ -119,7 +116,7 @@ echo "
 
 cat ${TRegGA_DIR}/xloadmodules >> runTRegGA_${SYNONYM}-on-${TARGET}
 ```
-###### Block 3: main body
+###### Block 4: main body
 ```
 echo "
 TRegGA_DIR=${TRegGA_DIR}
