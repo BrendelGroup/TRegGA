@@ -35,7 +35,7 @@ TRegGA_DIR=$(pwd)
 SRCDIR=/usr/local/src/NGS-DIR
 #SRCDIR=/N/dc2/projects/brendelgroup/TRegGA/src
 ```
-##### Configure TRegGA.config. Update TRegGA_DIR.
+##### Configure `TRegGA.config`. Update TRegGA_DIR.
 * IMPORTANT: TRegGA_DIR inside TRegGA.config should NOT be set using $(pwd) method, as TRegGA.config are to be included in different makefiles located in different directory, and using $(pwd) would result in different TRegGA_DIR. 
 * Use "|" instead of "/" as separator for sed due to the "/" in TRegGA path
 * sed command should be enclosed in "" for the variable ${TRegGA_DIR} to be substituted.
