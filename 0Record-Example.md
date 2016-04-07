@@ -36,7 +36,7 @@ SRCDIR=/usr/local/src/NGS-DIR
 #SRCDIR=/N/dc2/projects/brendelgroup/TRegGA/src
 ```
 ##### Update TRegGA_DIR in `TRegGA.config`
-* TRegGA_DIR inside `TRegGA.config` should NOT be set using $(pwd) method, as `TRegGA.config` are to be included in different makefiles located in different directories.
+* TRegGA_DIR inside `TRegGA.config` should NOT be set using $(pwd) method, as `TRegGA.config` is to be included in different makefiles located in different directories.
 ```
 sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.config.gnomic > TRegGA.config
 sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.config
