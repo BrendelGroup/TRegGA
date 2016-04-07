@@ -83,6 +83,7 @@ head -$k TRegGA.sample | tail -1 > rec
 SYNONYM=`cut -d "|" -f2 rec`
 grep -v "^#PBS" runTRegGA_${SYNONYM}-on-${TARGET} > tmp
 grep -v "^module" tmp > runTRegGA_${SYNONYM}-on-${TARGET}
+done
 ```
 
 ### Run runTRegGA
