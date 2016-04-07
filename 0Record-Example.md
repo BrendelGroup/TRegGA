@@ -55,7 +55,7 @@ sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.source.gnomic > TRegGA.source
 sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.source
 ```
 ##### Setup `TRegGA.sample`
-* `TRegGA.sample` is a list of samples formatted as `CULTIVAR|SYNONYM`, one sample per row.
+* `TRegGA.sample` is a list of samples formatted as `CULTIVAR|SYNONYM`, one sample per row, such as:
 ```
 echo "Biniapan|BINIAPAN
 IRIS 313-10712|KOTOOURA
