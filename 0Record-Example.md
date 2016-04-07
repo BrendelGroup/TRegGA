@@ -64,9 +64,11 @@ CX140|NIPPONBARE
 IRIS 313-11356|CR441" > TRegGA.sample
 ```
 
-### runTRegGA script
-##### Setup TRegGA parameters 
+### Make runTRegGA
 * This script takes a list of `CULTIVAR|SYNONYM` of samples in `TRegGA.sample`, and then generate sub-script, runTRegGA, for TRegGA job submitting.
+
+##### Setup TRegGA parameters 
+
 ```
 TRegGA_DIR=$(pwd)
 source ${TRegGA_DIR}/TRegGA.source
@@ -156,7 +158,7 @@ make CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR='\\\"${CULTIVAR}\\\"' SY
 done
 ```
 
-### runTRegGA
+### run runTRegGA
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
