@@ -1,10 +1,10 @@
 ### CHECKLIST prior to running TRegGA:
--[x] Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
-- Install the required softwares as described in INSTALL.md
-3. Optional: setup the required modules to run in HPC environment such as Mason with xloadmodules
-4. Check for any missing softwares with check-prereqs.sh 
-5. Configure TRegGA.config for software locations that needs to be included into makefiles
-6. Install the requqired reference and datasets with setup.sh
+- [ ] Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
+- [ ] Install the required softwares as described in INSTALL.md
+- [ ] Optional: setup the required modules to run in HPC environment such as Mason with xloadmodules
+- [ ] Check for any missing softwares with check-prereqs.sh 
+- [ ] Configure TRegGA.config for software locations that needs to be included into makefiles
+- [ ] Install the requqired reference and datasets with setup.sh
 7. Check for any missing dataset with check-data.sh
 8. Optional: link reads and assemblies from other TRegGA repository to here with xlink
 9. Configure TRegGA.source for program locations that needs to be included into shell environment
