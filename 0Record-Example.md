@@ -88,7 +88,8 @@ for ((k=1; k<=$len; k++))
 do
 head -$k TRegGA.sample | tail -1 > rec
 SYNONYM=`cut -d "|" -f2 rec`
-# qsub runTRegGA_${SYNONYM}-on-${TARGET}
+# choose qsub or shell version to run
+qsub runTRegGA_${SYNONYM}-on-${TARGET}
 # sh runTRegGA_${SYNONYM}-on-${TARGET} &
 done
 ```
