@@ -35,15 +35,13 @@ TRegGA_DIR=$(pwd)
 SRCDIR=/usr/local/src/NGS-DIR
 #SRCDIR=/N/dc2/projects/brendelgroup/TRegGA/src
 ```
-##### Configure `TRegGA.config`. Update TRegGA_DIR.
-* IMPORTANT: TRegGA_DIR inside TRegGA.config should NOT be set using $(pwd) method, as TRegGA.config are to be included in different makefiles located in different directory, and using $(pwd) would result in different TRegGA_DIR. 
-* Use "|" instead of "/" as separator for sed due to the "/" in TRegGA path
-* sed command should be enclosed in "" for the variable ${TRegGA_DIR} to be substituted.
+##### Update TRegGA_DIR in `TRegGA.config`
+* TRegGA_DIR inside `TRegGA.config` should NOT be set using $(pwd) method, as `TRegGA.config` are to be included in different makefiles located in different directories.
 ```
 sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.config.gnomic > TRegGA.config
 sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.config
 ```
-- [ ] Link other TRegGA repository with xlink
+##### Link other TRegGA repository with `xlink`
 ```
 REPO=/home/huangcy/MYWORK/TRegGA
 # REPO=/N/dc2/projects/brendelgroup/TRegGA/prj
@@ -51,12 +49,12 @@ REPO=/home/huangcy/MYWORK/TRegGA
 sed -e "s|YOUR_REPO_DIR|${REPO}|g" xlink-orig > xlink
 tcsh xlink
 ```
-- [ ] Configure TRegGA.source. Update TRegGA_DIR.
+##### Update TRegGA_DIR in `TRegGA.source`
 ```
 sed -e "s|YOUR_WORK_DIR|${TRegGA_DIR}|g" TRegGA.source.gnomic > TRegGA.source
 sed -i "s|YOUR_SRC_DIR|${SRCDIR}|g" TRegGA.source
 ```
-- [ ] Setup TRegGA.sample.
+##### Setup `TRegGA.sample`
 ```
 echo "Biniapan|BINIAPAN
 IRIS 313-10712|KOTOOURA
@@ -64,7 +62,14 @@ IRIS 313-11755|A2_257
 CX140|NIPPONBARE
 IRIS 313-11356|CR441" > TRegGA.sample
 ```
-- [ ] TRegGA parameters
+
+
+### runTRegGA script
+##### Setup TRegGA parameters 
+* This script takes a list of `CULTIVAR|SYNONYM` of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
+* Input file: TRegGA.sample, formatted as: `CULTIVAR|SYNONYM`, one sample per row.
+* Output: shell/qsub sub-script runTRegGA that are suitable for multi-sample job submission.
+
 ```
 TRegGA_DIR=$(pwd)
 source ${TRegGA_DIR}/TRegGA.source
@@ -81,11 +86,7 @@ REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
 ```
-### Generate runTRegGA script for each sample in TRegGA.sample 
-* This script takes a list of `CULTIVAR|SYNONYM` of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
-* Input file: TRegGA.sample, formatted as: `CULTIVAR|SYNONYM`, one sample per row.
-* Output: shell/qsub sub-script runTRegGA that are suitable for multi-sample job submission.
-
+##### Generate runTRegGA script for each sample in `TRegGA.sample` 
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
