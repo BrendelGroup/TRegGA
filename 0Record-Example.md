@@ -10,7 +10,7 @@
 - [ ] Configure `TRegGA.source` for program locations that needs to be included into shell environment
 - [ ] Setup `TRegGA.sample` as explained below
 - [ ] Run TRegGA as explained in `VIGNETTE.txt`
-- [ ] Alternatively, run `0Record-Example-qsub` to generate `runTRegGA`, then submit `runTRegGA` for TRegGA.  
+- [ ] Alternatively, run `0Record-Example-run` to generate `runTRegGA`, then submit `runTRegGA` for TRegGA.  
 
 ### Use case of TRegGA
 * Assembly of the SWEET13 locus using reads from cultivar Zhengshan97 against the rice Japonica Nipponbare reference genome.
@@ -64,21 +64,21 @@ CX140|NIPPONBARE
 IRIS 313-11356|CR441" > TRegGA.sample
 ```
 
-### Run `0Record-Example-qsub` to generate `runTRegGA`
-* `0Record-Example-qsub` takes a list of samples in `TRegGA.sample`, and then generate subscripts `runTRegGA`, for TRegGA job submitting.
-* `0Record-Example-qsub` generate qsub version of runTRegGA that is suitable for HPS TORQUE environment, such as mason.indiana.edu
-* Modify `0Record-Example-qsub` into shell version for Linux shell environment, such as gnomic.soic.indiana.edu    
+### Run `0Record-Example-run` to generate `runTRegGA`
+* `0Record-Example-run` takes a list of samples in `TRegGA.sample`, and then generate subscripts `runTRegGA`, for TRegGA job submitting.
+* `0Record-Example-run` generate qsub version of runTRegGA that is suitable for HPS TORQUE environment, such as mason.indiana.edu
+* Modify `0Record-Example-run` into shell version for Linux shell environment, such as gnomic.soic.indiana.edu    
 
 ##### Generate qsub version of runTRegGA
 ```
-sh 0Record-Example-qsub
+sh 0Record-Example-run
 ```
 
 ##### Generate shell version of runTRegGA
 ```
-grep -v "^#PBS" 0Record-Example-qsub > 0Record-Example-shell
-grep -v "^module" 0Record-Example-shell > tmp && mv tmp 0Record-Example-shell
-sh 0Record-Example-shell
+grep -v "^#PBS" 0Record-Example-run > 0Record-Example-sh
+grep -v "^module" 0Record-Example-sh > tmp && mv tmp 0Record-Example-sh
+sh 0Record-Example-sh
 ```
 
 ### Run runTRegGA
