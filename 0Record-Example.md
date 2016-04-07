@@ -1,7 +1,7 @@
 ### Checklist prior to running TRegGA
 - [ ] Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
 - [ ] Install the required softwares as described in `INSTALL.md`
-- [ ] Optional: setup the required modules to run in HPC environment such as Mason with `xloadmodules`
+- [ ] Optional: setup the required modules to run in HPS environment such as Mason with `xloadmodules`
 - [ ] Check for any missing softwares with `check-prereqs.sh` 
 - [ ] Configure `TRegGA.config` for software locations that needs to be included into makefiles
 - [ ] Install the requqired reference and datasets with `setup.sh`
@@ -67,7 +67,7 @@ IRIS 313-11356|CR441" > TRegGA.sample
 ### Make runTRegGA
 * This script takes a list of `CULTIVAR|SYNONYM` of samples in `TRegGA.sample`, and then generate sub-script, `runTRegGA`, for TRegGA job submitting.
 * use Blocks 1-2-3a-4 to generate shell script for Linux shell environment such as gnomic.soic.indiana.edu    
-* use Blocks 1-2-3b-4 to generate qsub script for HPC TORQUE environment such as mason.indiana.edu    
+* use Blocks 1-2-3b-4 to generate qsub script for HPS TORQUE environment such as mason.indiana.edu    
 
 ##### Block 1: TRegGA parameters 
 ```
