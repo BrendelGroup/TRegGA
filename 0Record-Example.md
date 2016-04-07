@@ -64,14 +64,14 @@ CX140|NIPPONBARE
 IRIS 313-11356|CR441" > TRegGA.sample
 ```
 
-### Run `0Record-Example-run` to generate `runTRegGA`
-* `0Record-Example-run` takes a list of samples in `TRegGA.sample`, and then generate subscripts `runTRegGA`, for TRegGA job submitting.
-* `0Record-Example-run` generate qsub version of runTRegGA that is suitable for HPS TORQUE environment, such as mason.indiana.edu
-* Modify `0Record-Example-run` into shell version for Linux shell environment, such as gnomic.soic.indiana.edu    
+### Run `0Record-Example.run` to generate `runTRegGA`
+* `0Record-Example.run` takes a list of samples in `TRegGA.sample`, and then generate subscripts `runTRegGA`, for TRegGA job submitting.
+* `0Record-Example.run` generate qsub version of runTRegGA that is suitable for HPS TORQUE environment, such as mason.indiana.edu
+* Modify `0Record-Example.run` into shell version for Linux shell environment, such as gnomic.soic.indiana.edu    
 
 ##### Generate qsub version of runTRegGA
 ```
-sh 0Record-Example-run
+sh 0Record-Example.run
 ```
 
 ##### Generate shell version of runTRegGA
