@@ -1,16 +1,16 @@
 ### CHECKLIST prior to running TRegGA
 - [ ] Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
-- [ ] Install the required softwares as described in INSTALL.md
-- [ ] Optional: setup the required modules to run in HPC environment such as Mason with xloadmodules
-- [ ] Check for any missing softwares with check-prereqs.sh 
-- [ ] Configure TRegGA.config for software locations that needs to be included into makefiles
-- [ ] Install the requqired reference and datasets with setup.sh
-- [ ] Check for any missing dataset with check-data.sh
-- [ ] Optional: link reads and assemblies from other TRegGA repository to here with xlink
-- [ ] Configure TRegGA.source for program locations that needs to be included into shell environment
-- [ ] Setup TRegGA.sample as explained below
-- [ ] Run TRegGA as explained in VIGNETTE.txt. 
-- [ ] Alternatively, setup and run sub-scripts generated from the following script.  
+- [ ] Install the required softwares as described in `INSTALL.md`
+- [ ] Optional: setup the required modules to run in HPC environment such as Mason with `xloadmodules`
+- [ ] Check for any missing softwares with `check-prereqs.sh` 
+- [ ] Configure `TRegGA.config` for software locations that needs to be included into makefiles
+- [ ] Install the requqired reference and datasets with `setup.sh`
+- [ ] Check for any missing dataset with `check-data.sh`
+- [ ] Optional: link reads and assemblies from other TRegGA repository to here with `xlink`
+- [ ] Configure `TRegGA.source` for program locations that needs to be included into shell environment
+- [ ] Setup `TRegGA.sample` as explained below
+- [ ] Run TRegGA as explained in `VIGNETTE.txt`
+- [ ] Alternatively, setup and run sub-scripts `runTRegGA` generated from the following script.  
 
 ### Case use of TRegGA
 * Assembly of the SWEET13 locus using Zhengshan97 reads against the rice Japonica Nipponbare reference genome.
