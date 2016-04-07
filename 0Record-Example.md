@@ -13,12 +13,12 @@
 - [ ] Alternatively, setup and run sub-scripts generated from the following script.  
 
 ### runTRegGA
-* This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
-* Input file: TRegGA.sample, formatted as: CULTIVAR|SYNONYM, one sample per row.
+* This script takes a list of `CULTIVAR|SYNONYM` of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
+* Input file: TRegGA.sample, formatted as: `CULTIVAR|SYNONYM`, one sample per row.
 * Output: shell/qsub sub-script runTRegGA that are suitable for multi-sample job submission.
 * The CULTIVAR argument must be in quotes (allowing spaces).
-* The CULTIVAR can be the cultivar VARNAME such as "KOTO OURA S 5", or less confusingly, the cultivar UNIQUE_ID such as "IRIS 313-10712".
-* The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as "IRIS 313-10712" could be presented as "IRIS_313-10712", "KOTO OURA S 5" could be presented as "KOTO-OURA-S-5".
+* The CULTIVAR can be the cultivar VARNAME such as `KOTO OURA S 5`, or less confusingly, the cultivar UNIQUE_ID such as `IRIS 313-10712`.
+* The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as `IRIS 313-10712` could be presented as `IRIS_313-10712`, `KOTO OURA S 5` could be presented as `KOTO-OURA-S-5`.
 * User is advised to check/convert to the acceptable cultivar name prior to running TRegGA by validating it against this table reads/rice_line_metadata_20140521.tsv, or against the Rice SNP-Seek Database from IRRI, available at http://oryzasnp.org/iric-portal/_variety.zul 
 * The SYNONYM argument should be one word, with no space, hyphen or dot, such as KOTOOURAS5. Word with underscore is acceptable, such as KOTO_OURA_S_5. 
 * The TARGET argument should uniquely identify the target specified by REFERENCE, FROM - TO range.
