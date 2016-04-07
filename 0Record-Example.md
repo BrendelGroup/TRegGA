@@ -64,7 +64,7 @@ CX140|NIPPONBARE
 IRIS 313-11356|CR441" > TRegGA.sample
 ```
 
-### Make runTRegGA
+### Generate runTRegGA
 * This script takes a list of samples in `TRegGA.sample`, and then generate sub-script, `runTRegGA`, for TRegGA job submitting.
 * use qsub version for HPS TORQUE environment such as mason.indiana.edu    
 * use shell version for Linux shell environment such as gnomic.soic.indiana.edu    
