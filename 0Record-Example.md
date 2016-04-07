@@ -10,12 +10,12 @@
 - [ ] Configure TRegGA.source for program locations that needs to be included into shell environment
 - [ ] Setup TRegGA.sample as explained below
 - [ ] Run TRegGA as explained in VIGNETTE.txt. 
-- [ ] Alternatively, setup and run sub-scripts generated from runTRegGA (below).  
+- [ ] Alternatively, setup and run sub-scripts generated from the following script.  
 
-### runTRegGA script
-* This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate scripts for TRegGA job submitting.
-* Input file: TRegGA.sample, formatted as: CULTIVAR|SYNONYM, One sample per row of the table.
-* Output: shell/qsub sub-scripts that are suitable for multi-sample job submission.
+### runTRegGA
+* This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate sub-script, runTRegGA, for TRegGA job submitting.
+* Input file: TRegGA.sample, formatted as: CULTIVAR|SYNONYM, one sample per row.
+* Output: shell/qsub sub-script runTRegGA that are suitable for multi-sample job submission.
 * The CULTIVAR argument must be in quotes (allowing spaces).
 * The CULTIVAR can be the cultivar VARNAME such as "KOTO OURA S 5", or less confusingly, the cultivar UNIQUE_ID such as "IRIS 313-10712".
 * The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as "IRIS 313-10712" could be presented as "IRIS_313-10712", "KOTO OURA S 5" could be presented as "KOTO-OURA-S-5".
