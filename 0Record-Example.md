@@ -65,7 +65,7 @@ IRIS 313-11356|CR441" > TRegGA.sample
 ```
 
 ### Make runTRegGA
-* This script takes a list of `CULTIVAR|SYNONYM` of samples in `TRegGA.sample`, and then generate sub-script, runTRegGA, for TRegGA job submitting.
+* This script takes a list of `CULTIVAR|SYNONYM` of samples in `TRegGA.sample`, and then generate sub-script, `runTRegGA`, for TRegGA job submitting.
 
 ##### Setup TRegGA parameters 
 
@@ -86,6 +86,8 @@ FROM=17292001
 TO=17315000
 ```
 ##### Generate runTRegGA script for each sample in `TRegGA.sample` 
+
+###### Block1: iterator
 ```
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
@@ -94,12 +96,14 @@ head -$k TRegGA.sample | tail -1 > rec
 CULTIVAR=`cut -d "|" -f1 rec`
 SYNONYM=`cut -d "|" -f2 rec`
 ```
+###### Block 2a: header if run in shell environment 
 ```
 echo "
 #!/bin/sh
 set -eo pipefail
 " > runTRegGA_${SYNONYM}-on-${TARGET}
 ```
+###### Block 2b: header if run in qsub environment
 ```
 echo "
 #!/bin/bash
@@ -113,6 +117,7 @@ echo "
 
 cat ${TRegGA_DIR}/xloadmodules >> runTRegGA_${SYNONYM}-on-${TARGET}
 ```
+###### Block 3: main body
 ```
 echo "
 TRegGA_DIR=${TRegGA_DIR}
