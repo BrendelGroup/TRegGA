@@ -1,34 +1,30 @@
-##---------------------------
-## CHECKLIST prior to running TRegGA:
+### CHECKLIST prior to running TRegGA:
 1. Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
-#2. Install the required softwares as described in INSTALL.md
-#3. Optional: setup the required modules to run in HPC environment such as Mason with xloadmodules
-#4. Check for any missing softwares with check-prereqs.sh 
-#5. Configure TRegGA.config for software locations that needs to be included into makefiles
-#6. Install the requqired reference and datasets with setup.sh
-#7. Check for any missing dataset with check-data.sh
-#8. Optional: link reads and assemblies from other TRegGA repository to here with xlink
-#9. Configure TRegGA.source for program locations that needs to be included into shell environment
-#10. Setup TRegGA.sample as explained below
-#11. Run TRegGA as explained in VIGNETTE.txt. Alternatively, setup and run sub-scripts generated from this script.  
+2. Install the required softwares as described in INSTALL.md
+3. Optional: setup the required modules to run in HPC environment such as Mason with xloadmodules
+4. Check for any missing softwares with check-prereqs.sh 
+5. Configure TRegGA.config for software locations that needs to be included into makefiles
+6. Install the requqired reference and datasets with setup.sh
+7. Check for any missing dataset with check-data.sh
+8. Optional: link reads and assemblies from other TRegGA repository to here with xlink
+9. Configure TRegGA.source for program locations that needs to be included into shell environment
+10. Setup TRegGA.sample as explained below
+11. Run TRegGA as explained in VIGNETTE.txt. Alternatively, setup and run sub-scripts generated from this script.  
 
-##---------------------------
-## This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate scripts for TRegGA job submitting.
-# Input file: TRegGA.sample, formatted as: CULTIVAR|SYNONYM, One sample per row of the table.
-# Output: shell/qsub sub-scripts that are suitable for multi-sample job submission.
-# The CULTIVAR argument must be in quotes (allowing spaces).
-# The CULTIVAR can be the cultivar VARNAME such as "KOTO OURA S 5", or less confusingly, the cultivar UNIQUE_ID such as "IRIS 313-10712".
-# The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format,
-# such as "IRIS 313-10712" could be presented as "IRIS_313-10712", "KOTO OURA S 5" could be presented as "KOTO-OURA-S-5".
-# User is advised to check/convert to the acceptable cultivar name prior to running TRegGA by validating it against this table:
-# reads/rice_line_metadata_20140521.tsv
-# or against the Rice SNP-Seek Database from IRRI, available at http://oryzasnp.org/iric-portal/_variety.zul 
-# The SYNONYM argument should be one word, with no space, hyphen or dot, such as KOTOOURAS5. Word with underscore is acceptable, such as KOTO_OURA_S_5. 
-# The TARGET argument should uniquely identify the target specified by REFERENCE, FROM - TO range.
-# If you want to change the range later, then use a different label or remove the existing TARGET.* files in subdirectory targets.
+### This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate scripts for TRegGA job submitting.
+* Input file: TRegGA.sample, formatted as: CULTIVAR|SYNONYM, One sample per row of the table.
+* Output: shell/qsub sub-scripts that are suitable for multi-sample job submission.
+* The CULTIVAR argument must be in quotes (allowing spaces).
+* The CULTIVAR can be the cultivar VARNAME such as "KOTO OURA S 5", or less confusingly, the cultivar UNIQUE_ID such as "IRIS 313-10712".
+* The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as "IRIS 313-10712" could be presented as "IRIS_313-10712", "KOTO OURA S 5" could be presented as "KOTO-OURA-S-5".
+* User is advised to check/convert to the acceptable cultivar name prior to running TRegGA by validating it against this table:
+    reads/rice_line_metadata_20140521.tsv
+    or against the Rice SNP-Seek Database from IRRI, available at http://oryzasnp.org/iric-portal/_variety.zul 
+* The SYNONYM argument should be one word, with no space, hyphen or dot, such as KOTOOURAS5. Word with underscore is acceptable, such as KOTO_OURA_S_5. 
+* The TARGET argument should uniquely identify the target specified by REFERENCE, FROM - TO range.
+* If you want to change the range later, then use a different label or remove the existing TARGET.* files in subdirectory targets.
 
-##---------------------------
-## Example for TRegGA
+### Example for TRegGA
 # Assembly of the SWEET13 locus using Zhengshan97 reads against the rice Japonica Nipponbare reference genome.
 # CULTIVAR: Zhengshan97, SYNONYM: ZHENGSHAN97.
 # Target source: http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01
