@@ -12,7 +12,7 @@
 - [ ] Run TRegGA as explained in `VIGNETTE.txt`
 - [ ] Alternatively, setup and run sub-scripts `runTRegGA` generated from the following script.  
 
-### Case use of TRegGA
+### Use case of TRegGA
 * Assembly of the SWEET13 locus using reads from cultivar Zhengshan97 against the rice Japonica Nipponbare reference genome.
 * [SWEET13](http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01) (Xa25/xa25, Os12N3) Bidirectional sugar transporter. Gene ID in Oryza sativa Japonica: OS12G0476200, chromosome 12: 17,302,127-17,305,326 reverse strand.
 * We recommed adding 10 Kb to the borders of the interested region as the final target to increase the specificity of the reference-guided assembly.
