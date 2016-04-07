@@ -14,8 +14,8 @@
 
 ### Case use of TRegGA
 * Assembly of the SWEET13 locus using reads from cultivar Zhengshan97 against the rice Japonica Nipponbare reference genome.
-* [SWEET13](http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01) (Xa25/xa25, Os12N3) gene ID in Oryza sativa Japonica: OS12G0476200, chromosome 12: 17,302,127-17,305,326 reverse strand.
-* SWEET13 description: Bidirectional sugar transporter. Coding exons: 6. Transcript length: 1,653bp. Protein residues: 296aa.
+* [SWEET13](http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01) (Xa25/xa25, Os12N3) Bidirectional sugar transporter. Coding exons: 6. Transcript length: 1,653bp. Protein residues: 296aa.
+* SWEET13: gene ID in Oryza sativa Japonica: OS12G0476200, chromosome 12: 17,302,127-17,305,326 reverse strand.
 * We recommed adding 10 Kb to the borders of the interested region as the final target to increase the specificity of the reference-guided assembly.
 * We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
 # Final makefile command looks like this:
