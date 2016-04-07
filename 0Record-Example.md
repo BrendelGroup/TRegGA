@@ -1,4 +1,4 @@
-### CHECKLIST prior to running TRegGA:
+### CHECKLIST prior to running TRegGA
 - [ ] Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
 - [ ] Install the required softwares as described in INSTALL.md
 - [ ] Optional: setup the required modules to run in HPC environment such as Mason with xloadmodules
@@ -9,9 +9,11 @@
 - [ ] Optional: link reads and assemblies from other TRegGA repository to here with xlink
 - [ ] Configure TRegGA.source for program locations that needs to be included into shell environment
 - [ ] Setup TRegGA.sample as explained below
-- [ ] Run TRegGA as explained in VIGNETTE.txt. Alternatively, setup and run sub-scripts generated from this script.  
+- [ ] Run TRegGA as explained in VIGNETTE.txt. 
+- [ ] Alternatively, setup and run sub-scripts generated from runTRegGA (below).  
 
-### This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate scripts for TRegGA job submitting.
+### runTRegGA script
+* This script takes a list of "CULTIVAR|SYNONYM" of samples, and then generate scripts for TRegGA job submitting.
 * Input file: TRegGA.sample, formatted as: CULTIVAR|SYNONYM, One sample per row of the table.
 * Output: shell/qsub sub-scripts that are suitable for multi-sample job submission.
 * The CULTIVAR argument must be in quotes (allowing spaces).
