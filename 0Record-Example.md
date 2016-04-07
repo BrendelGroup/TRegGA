@@ -1,5 +1,5 @@
 ### Checklist prior to running TRegGA
-- [ ] Install TRegGA: git clone https://github.com/BrendelGroup/TRegGA
+- [ ] Install TRegGA: git clone https://github.com/huangc/TRegGA
 - [ ] Install the required softwares as described in `INSTALL.md`
 - [ ] Optional: setup the required modules to run in HPS environment such as Mason with `xloadmodules`
 - [ ] Check for any missing softwares with `check-prereqs.sh` 
@@ -170,8 +170,8 @@ for ((k=1; k<=$len; k++))
 do
 head -$k TRegGA.sample | tail -1 > rec
 SYNONYM=`cut -d "|" -f2 rec`
+# sh runTRegGA_${SYNONYM}-on-${TARGET} &
 # qsub runTRegGA_${SYNONYM}-on-${TARGET}
-# sh runTRegGA_${SYNONYM}-on-${TARGET}
 done
 ```
 
