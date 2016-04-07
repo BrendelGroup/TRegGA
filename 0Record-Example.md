@@ -76,9 +76,13 @@ sh 0Record-Example-run
 
 ##### Generate shell version of runTRegGA
 ```
-grep -v "^#PBS" 0Record-Example-run > 0Record-Example-sh
-grep -v "^module" 0Record-Example-sh > tmp && mv tmp 0Record-Example-sh
-sh 0Record-Example-sh
+len=`awk 'END { print NR }' TRegGA.sample`
+for ((k=1; k<=$len; k++))
+do
+head -$k TRegGA.sample | tail -1 > rec
+SYNONYM=`cut -d "|" -f2 rec`
+grep -v "^#PBS" runTRegGA_${SYNONYM}-on-${TARGET} > runTRegGA
+grep -v "^module" runTRegGA > runTRegGA_${SYNONYM}-on-${TARGET}
 ```
 
 ### Run runTRegGA
