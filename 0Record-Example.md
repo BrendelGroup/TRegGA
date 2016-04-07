@@ -71,14 +71,14 @@ IRIS 313-11356|CR441" > TRegGA.sample
 
 ##### Generate qsub version of runTRegGA
 ```
-sh 0Record-Example.qsub
+sh 0Record-Example-qsub
 ```
 
 ##### Generate shell version of runTRegGA
 ```
-grep -v "^#PBS" 0Record-Example.qsub > 0Record-Example.sh
-grep -v "^module" 0Record-Example.sh > tmp && mv tmp 0Record-Example.sh
-sh 0Record-Example.sh
+grep -v "^#PBS" 0Record-Example-qsub > 0Record-Example-shell
+grep -v "^module" 0Record-Example-shell > tmp && mv tmp 0Record-Example-shell
+sh 0Record-Example-shell
 ```
 
 ### Run runTRegGA
