@@ -14,6 +14,10 @@ REFERENCE=OsjCHR12
 FROM=17292001
 TO=17315000
 
+##-----------------------------------------
+## No need to change below
+##-----------------------------------------
+
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
 do
