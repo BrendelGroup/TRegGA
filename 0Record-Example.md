@@ -20,7 +20,7 @@
 ```
 make CHECKONLY=no NUMPROC=30 CULTIVAR='\"Zhengshan97\"' SYNONYM=ZHENGSHAN97 TARGET=OsjSWEET13 REFERENCE=OsjCHR12 FROM=17292001 TO=17315000 -f Makefile_TRegGA-orig >& err_ZHENGSHAN97-on-OsjSWEET13
 ```
-### Things to know about the makefile arguments
+### Things to know about the TRegGA arguments
 * The CULTIVAR argument must be in quotes (allowing spaces), such as `"KOTO OURA S 5"`. In order for the quotes to be taken up by the makefile properly, it is necessary to protect it as `'\"KOTO OURA S 5\"'`.
 * The CULTIVAR can be the cultivar VARNAME such as `"KOTO OURA S 5"`, or less confusingly, the cultivar UNIQUE_ID such as `"IRIS 313-10712"`.
 * The VARNAME and UNIQUE_ID to be parsed may be different from what you would find from literatures or online resources in terms of its format, such as `"IRIS 313-10712"` could be presented as `"IRIS_313-10712"`, or `"KOTO OURA S 5"` could be presented as `"KOTO-OURA-S-5"`.
