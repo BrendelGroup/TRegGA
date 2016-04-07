@@ -98,14 +98,14 @@ head -$k TRegGA.sample | tail -1 > rec
 CULTIVAR=`cut -d "|" -f1 rec`
 SYNONYM=`cut -d "|" -f2 rec`
 ```
-###### Block 2a: header if run in shell environment 
+###### Block 2a: shell header if run in Linux shell environment
 ```
 echo "
 #!/bin/sh
 set -eo pipefail
 " > runTRegGA_${SYNONYM}-on-${TARGET}
 ```
-###### Block 2b: header if run in qsub environment
+###### Block 2b: qsub header if run in HPS TORQUE environment
 ```
 echo "
 #!/bin/bash
