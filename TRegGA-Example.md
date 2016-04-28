@@ -10,7 +10,7 @@
 - [ ] Optional: link reads and assemblies from other TRegGA repository to here with `xlink`
 - [ ] Setup `TRegGA.sample` as explained below
 - [ ] Run TRegGA as explained in `VIGNETTE.txt`
-- [ ] Alternatively, use `0Record-Example.run` to generate `runTRegGA*`, then submit `runTRegGA*`.  
+- [ ] Alternatively, use `TRegGA-Example.run` to generate `runTRegGA*`, then submit `runTRegGA*`.  
 
 ### Use case of TRegGA
 * Assembly of the SWEET13 locus using reads from cultivar Zhengshan97 against the rice Japonica Nipponbare reference genome.
