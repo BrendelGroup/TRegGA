@@ -74,14 +74,13 @@ sh TRegGA-Example.run
 ```
 ##### Generate shell version of runTRegGA
 ```
-TARGET=TargetName
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
 do
 head -$k TRegGA.sample | tail -1 > rec
 SYNONYM=`cut -d "|" -f2 rec`
-grep -v "^#PBS" runTRegGA_${SYNONYM}-on-${TARGET} > tmp
-grep -v "^module" tmp > runTRegGA_${SYNONYM}-on-${TARGET}
+grep -v "^#PBS" runTRegGA_${SYNONYM}-on-* > tmp
+grep -v "^module" tmp > runTRegGA_${SYNONYM}-on-*
 done
 ```
 ### Submit runTRegGA
