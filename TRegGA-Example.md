@@ -74,6 +74,7 @@ sh TRegGA-Example.run
 ```
 ##### Generate shell version of runTRegGA
 ```
+TARGET=TargetName
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
 do
