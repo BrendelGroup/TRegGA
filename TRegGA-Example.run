@@ -7,6 +7,7 @@ VMEM=500
 PPN=30
 CHECKONLY=no
 NUMPROC=30
+# SAMPLE="IRBB7 DV86 IRBB62"
 # CULTIVAR='\"Zhengshan97\"'
 # SYNONYM="ZHENGSHAN97"
 TARGET=OsjSWEET13
@@ -17,13 +18,33 @@ TO=17315000
 ##-----------------------------------------
 ## No need to change below
 ##-----------------------------------------
+# generate TRegGA.sample with a list of sample names in ${SAMPLE}
+\rm -f TRegGA.sample
+for k in ${SAMPLE}
+do
+grep "$k" ${TRegGA_DIR}/reads/rice_line_metadata_20140521.tsv > rec.rice_line
+VARID=`cut -f1 rec.rice_line`
+SNPseekID=`cut -f5 rec.rice_line`
+VARNAME=`cut -f13 rec.rice_line`
+VARGROUP=`cut -f18 rec.rice_line`
+echo "$VARID|$SNPseekID|$VARNAME|$VARGROUP" >> TRegGA.sample
+done
+
+# The VARNAME/SYNONYME (third column, $3) CANNOT have any whitespace in it. Replace the whitespaces with "_" or remove it if there is any.
+awk 'BEGIN {OFS=FS="|"} {gsub(/\s/,"_",$3); print }' TRegGA.sample > tmp && \mv tmp TRegGA.sample
+# awk 'BEGIN {OFS=FS="|"} {gsub(/\s/,"",$3); print }' TRegGA.sample > tmp && \mv tmp TRegGA.sample
+
+# To assign the first/third column as the sample names for TRegGA run
+# SAMPLE=`cut -d"|" -f1 TRegGA.sample | awk 1 ORS=" "`
+SAMPLE=`cut -d"|" -f3 TRegGA.sample | awk 1 ORS=" "`
+
 
 len=`awk 'END { print NR }' TRegGA.sample`
 for ((k=1; k<=$len; k++))
 do
 head -$k TRegGA.sample | tail -1 > rec
 CULTIVAR=`cut -d "|" -f1 rec`
-SYNONYM=`cut -d "|" -f2 rec`
+SYNONYM=`cut -d "|" -f3 rec`
 
 echo "
 #!/bin/bash
