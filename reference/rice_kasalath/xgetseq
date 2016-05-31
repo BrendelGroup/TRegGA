@@ -17,62 +17,39 @@ tar -xzf kasalath_genome.tar.gz
 tar -xzf kasalath_genome_softmasked.tar.gz
 tar -xzf kasalath_genes.tar.gz
 
-ln -s kasalath_genes/kasalath_RAP.gff Oryza_aus_kasalath.gff
-ln -s kasalath_genome/all.fasta Oryza_aus_kasalath.fa
+ln -s kasalath_genes/kasalath_RAP.gff OsaCHR.gff
+ln -s kasalath_genome/all.fasta OsaCHR.fa
+ln -s kasalath_genome_softmasked/all.softmasked.fasta OsaRMCHR.fa
 
 
 # 2. Add the label "OsaChr" to the chromosome sequence names so that ">chr01" becomes ">OsaChr1", etc.:
 
-sed -i -e "s/^>chr0\([1-9]\)/>OsaChr\1/" Oryza_aus_kasalath.fa
-sed -i -e "s/^>chr1\([1-9]\)/>OsaChr1\1/" Oryza_aus_kasalath.fa
-sed -i -e "s/^>UM/>OsaChrUM" Oryza_aus_kasalath.fa
-
-# 3. Create BLAST databases for the genome and protein sequences:
-
-makeblastdb -in Oryza_sativa.IRGSP-1.0.26.dna.genome.fa -dbtype nucl -parse_seqids -out OsjDNA
-makeblastdb -in Oryza_sativa.IRGSP-1.0.26.pep.all.fa    -dbtype prot -parse_seqids -out OsjPEP
+sed -i -e "s/^>chr0\([1-9]\)/>OsaChr\1/" OsaCHR.fa
+sed -i -e "s/^>chr1\([0-9]\)/>OsaChr1\1/" OsaCHR.fa
+sed -i -e "s/^>UM/>OsaChrUM/" OsaCHR.fa
 
 
-# 4. Prepare OsjPRT for use with gth:
+# 3. Create BLAST databases for the genome sequences:
 
-gt seqtransform -addstopaminos Oryza_sativa.IRGSP-1.0.26.pep.all.fa > OsjPRT
-
-
-# 5. Extract the chromosome sequences into file OsjCHR.fa:
-
-blastdbcmd -db OsjDNA -entry OsjChr1,OsjChr2,OsjChr3,OsjChr4,OsjChr5,OsjChr6,OsjChr7,OsjChr8,OsjChr9,OsjChr10,OsjChr11,OsjChr12 \
-    | sed "s/^>lcl|/>/;" \
-    > OsjCHR.fa
+makeblastdb -in OsaCHR.fa -dbtype nucl -parse_seqids -out OsaDNA
 
 
-# 6. Retrieve the repeat-masked chromosome sequences:
+# 4. Modify the repeat-masked chromosome sequences so that ">chr01" becomes ">OsaRmChr1", etc.:
 
-for i in {1..12}; do
-    wget ftp://ftp.ensemblgenomes.org/pub/plants/release-26/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.26.dna_rm.chromosome.${i}.fa.gz
-done
-
-gunzip -f *dna_rm.*fa.gz
+sed -i -e "s/^>chr0\([1-9]\)/>OsaRmChr\1/" OsaRMCHR.fa
+sed -i -e "s/^>chr1\([0-9]\)/>OsaRmChr1\1/" OsaRMCHR.fa
+sed -i -e "s/^>UM/>OsaChrRmUM/" OsaRMCHR.fa
 
 
-# 7. Change the names to OsjRmChr* and compile into file OsjRMCHR.fa, then clean up:
-
-cat *dna_rm.chromosome.[1-9].fa *dna_rm.chromosome.1[0-2].fa \
-    | sed -e "s/^>\([1-9]\)/>OsjRmChr\1/" \
-    > OsjRMCHR.fa
-\rm *dna_rm.chromosome.*fa
-
-
-# 8. Extract gene coordinates from the *.gff3 file with sequence identifiers appropriate for unmasked and masked
+# 5. Extract gene coordinates from the *.gff3 file with sequence identifiers appropriate for unmasked and masked
 #    chromosome sequences (for possible use with QUAST):
 
-sed -e "s/^\([1-9]\)/OsjChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3 \
-    | egrep "^##|^OsjChr.*	gene	" \
-    > OsjCHR.gff3
-sed -e "s/^\([1-9]\)/OsjRmChr\1/" Oryza_sativa.IRGSP-1.0.26.gff3 \
-    | egrep "^##|^OsjRmChr.*	gene	" \
-    > OsjRMCHR.gff3
+sed -i -e "s/^chr0\([1-9]\)/OsaChr\1/" OsaCHR.gff
+sed -i -e "s/^chr1\([0-9]\)/OsaChr1\1/" OsaCHR.gff
+sed -i -e "s/^UM/OsaChrUM/" OsaCHR.gff
 
+egrep "^OsaChr.*mRNA" OsaCHR.gff > tmp &&\
+\mv tmp OsaCHR.gff
 
-# 9. Verify the files have been downloaded and processed correctly.
+\rm -r *.tar.gz
 
-shasum -c checksums.sha
