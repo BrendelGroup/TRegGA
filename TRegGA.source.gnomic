@@ -1,0 +1,25 @@
+# TRegGA runtime configuration
+# To be included in shell script
+# Specific to gnomic.soic.indiana.edu
+
+# Programs and executables variables for the shell environment
+# ------------------------------------------------------------------------------
+# Within the TRegGA root directory we have created a `bin` directory for storing
+# executables. This bin directory must be added to your `PATH` environmental
+# variable in your ~/.bash_profile  before running the TRegGA pipeline.
+# Corresponding source code distributions can be found in the `src` directory.
+
+TRegGA_DIR=YOUR_WORK_DIR
+SRCDIR=YOUR_SRC_DIR
+export PATH=$PATH:/usr/local/bin
+export PATH=$PATH:${SRCDIR}/BOWTIE/bowtie
+export PATH=$PATH:${SRCDIR}/BOWTIE2/bowtie2-2.2.5
+export PATH=$PATH:${SRCDIR}/BWA/bwa-0.7.12
+export PATH=$PATH:${SRCDIR}/SAMTOOLS/samtools
+
+# PAGIT
+# ------------------------------------------------------------------------------
+# The PAGIT package includes a script that must be placed in the user's .bashrc
+# file for PAGIT to work properly.
+# source /usr/local/src/NGS-DIR/PAGIT/PAGIT/sourceme.pagit
+

@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -exo pipefail
+
+# 0. Check for software prerequisites:
+which makeblastdb
+which gt
+which blastdbcmd
+
+
+# 1. Retrieve Oryza sativa aus cultivar kasalath (Osa) sequences from Ensembl:
+
+wget http://rice50ks.dna.affrc.go.jp/kasalath_genome.tar.gz .
+wget http://rice50ks.dna.affrc.go.jp/kasalath_genome_softmasked.tar.gz .
+wget http://rice50ks.dna.affrc.go.jp/kasalath_genes.tar.gz .
+
+tar -xzf kasalath_genome.tar.gz
+tar -xzf kasalath_genome_softmasked.tar.gz
+tar -xzf kasalath_genes.tar.gz
+
+ln -s kasalath_genes/kasalath_RAP.gff OsaCHR.gff
+ln -s kasalath_genome/all.fasta OsaCHR.fa
+ln -s kasalath_genome_softmasked/all.softmasked.fasta OsaRMCHR.fa
+
+
+# 2. Add the label "OsaChr" to the chromosome sequence names so that ">chr01" becomes ">OsaChr1", etc.:
+
+sed -i -e "s/^>chr0\([1-9]\)/>OsaChr\1/" OsaCHR.fa
+sed -i -e "s/^>chr1\([0-9]\)/>OsaChr1\1/" OsaCHR.fa
+sed -i -e "s/^>UM/>OsaChrUM/" OsaCHR.fa
+
+
+# 3. Create BLAST databases for the genome sequences:
+
+makeblastdb -in OsaCHR.fa -dbtype nucl -parse_seqids -out OsaDNA
+
+
+# 4. Modify the repeat-masked chromosome sequences so that ">chr01" becomes ">OsaRmChr1", etc.:
+
+sed -i -e "s/^>chr0\([1-9]\)/>OsaRmChr\1/" OsaRMCHR.fa
+sed -i -e "s/^>chr1\([0-9]\)/>OsaRmChr1\1/" OsaRMCHR.fa
+sed -i -e "s/^>UM/>OsaChrRmUM/" OsaRMCHR.fa
+
+
+# 5. Extract gene coordinates from the *.gff3 file with sequence identifiers appropriate for unmasked and masked
+#    chromosome sequences (for possible use with QUAST):
+
+sed -i -e "s/^chr0\([1-9]\)/OsaChr\1/" OsaCHR.gff
+sed -i -e "s/^chr1\([0-9]\)/OsaChr1\1/" OsaCHR.gff
+sed -i -e "s/^UM/OsaChrUM/" OsaCHR.gff
+
+egrep "^OsaChr.*mRNA" OsaCHR.gff > tmp &&\
+\mv tmp OsaCHR.gff
+
+\rm -r *.tar.gz
+

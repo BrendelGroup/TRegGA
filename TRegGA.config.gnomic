@@ -1,0 +1,20 @@
+# TRegGA runtime configuration
+# To be included in make file
+# Specific to gnomic.soic.indiana.edu
+
+# Programs and executables variables for the makefiles
+# ------------------------------------------------------------------------------
+TRegGA_DIR         = YOUR_WORK_DIR
+SRCDIR            = YOUR_SRC_DIR
+SRATOOLKIT        = ${SRCDIR}/SRATOOLKIT/sratoolkit.2.5.2-centos_linux64/bin
+FASTQC            = ${SRCDIR}/FASTQC/FastQC
+TRIMMOMATIC       = ${SRCDIR}/TRIMMOMATIC/Trimmomatic-0.33/trimmomatic-0.33.jar
+ADAPTORS          = ${SRCDIR}/TRIMMOMATIC/Trimmomatic-0.33/adapters
+NGSUTILS          = ${SRCDIR}/NGSUtils/ngsutils/bin
+KMERGENIE_DIR     = ${SRCDIR}/KmerGenie/kmergenie-1.6950
+SOAP_DIR          = ${SRCDIR}/SOAPdenovo2/SOAPdenovo2-bin-LINUX-generic-r240
+QUAST             = ${SRCDIR}/QUAST/quast-2.3
+GAPFILLER_DIR     = ${SRCDIR}/GAPFILLER/GapFiller_v1-10_linux-x86_64
+ALIGNGRAPH        = ${SRCDIR}/AlignGraph/AlignGraph/AlignGraph
+PAGIT_DIR         = ${SRCDIR}/PAGIT/PAGIT
+

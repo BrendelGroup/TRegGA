@@ -1,0 +1,24 @@
+# TRegGA runtime configuration
+# To be included in shell script
+# Specific to mason.indiana.edu
+
+# Programs and executables variables for the shell environment
+# ------------------------------------------------------------------------------
+# Within the TRegGA root directory we have created a `bin` directory for storing
+# executables. This bin directory must be added to your `PATH` environmental
+# variable in your ~/.bash_profile  before running the TRegGA pipeline.
+# Corresponding source code distributions can be found in the `src` directory.
+
+TRegGA_DIR=YOUR_WORK_DIR
+SRCDIR=YOUR_SRC_DIR
+export PATH=/N/dc2/projects/brendelgroup/TRegGA/bin:$PATH
+export PATH=${SRCDIR}/EMBOSS/EMBOSS-6.6.0/emboss:$PATH
+export PATH=${SRCDIR}/GENOMETOOLS/genometools-1.5.6/bin:$PATH
+export PATH=${SRCDIR}/GENOMETHREADER/gth-1.6.5-Linux_x86_64-64bit/bin:$PATH
+
+# PAGIT
+# ------------------------------------------------------------------------------
+# The PAGIT package includes a script that must be placed in the user's .bashrc
+# file for PAGIT to work properly.
+# source /N/dc2/projects/brendelgroup/TRegGA/src/PAGIT/PAGIT/sourceme.pagit
+

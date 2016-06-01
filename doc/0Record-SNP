@@ -1,0 +1,156 @@
+#!/bin/sh
+set -eo pipefail
+
+##-------------------------
+## TRegGA-INSTALL contains general installation instructions for the programs used by TRegGA.
+# TRegGA.config contains TRegGA runtime configuration for program locations that needs to be included into makefiles. 
+# TRegGA.config.mason is specific to mason.indiana.edu, and should replace TRegGA.config before TRegGA execution.
+# TRegGA.source contains TRegGA runtime configuration for program locations that needs to be included into shell environment. 
+# TRegGA.source.mason is specific to mason.indiana.edu, and should replace TRegGA.source before TRegGA execution.
+
+##-------------------------
+## Prepare for the initial use of the references. Do this only once.
+# sh ${TRegGA_DIR}/reference/rice_japonica/xgetseq
+# sh ${TRegGA_DIR}/reference/rice_indica/xgetseq
+## Prepare for the initial use of the targets. Do this after the references initialization is finished, and only once.
+# sh ${TRegGA_DIR}/targets/xentret
+
+##--------------------------
+## Example for submitting job on mason.indiana.edu
+# Assembly of the SWEET13 locus using Zhengshan97 reads against the rice Japonica Nipponbare reference genome.
+# Source: http://plants.ensembl.org/Oryza_sativa/Gene/Summary?g=OS12G0476200;r=12:17302127-17305326;t=OS12T0476200-01
+# SWEET13 description: Bidirectional sugar transporter [Source:UniProtKB/Swiss-Prot;Acc:Q2QR07]
+# SWEET13 (Xa25/xa25, Os12N3) gene ID in Oryza sativa Japonica: OS12G0476200.
+# SWEET13 coding exons: 6. Transcript length: 1,653bp. Protein residues: 296aa.
+# Oryza sativa Japonica chromosome 12: 17,302,127-17,305,326 reverse strand.
+# We recommed adding 10 Kb to the borders of the interested region as the final target to increase the specificity of the reference-guided assembly.
+# We use chr12:17,292,001-17,315,000 as the target region for the following TRegGA example.
+
+
+##---------------------------
+# Variety name NIPPONBARE
+# IRIS ID CX140
+# Subpopulation temp
+# MDS Coord -0.2079, 0.0121
+# Nipponbare
+
+# Variety name YUEGUANG
+# IRIS ID CX330
+# Subpopulation temp
+# MDS Coord -0.2071, 0.0125
+# UID: Yueguang
+
+# Variety name SHANJIUGU
+# IRIS ID B245
+# Subpopulation trop2
+# MDS Coord -0.2056 0.0079
+# UID: Shanjiugu
+
+# Variety name CUNSANLI
+# IRIS ID B205
+# Subpopulation japx
+# MDS Coord -0.2070 0.0086
+# UID: Cunsanli
+
+# Variety name FAN GENG 6::IRGC 70243-1
+# IRIS ID IRIS 313-11800
+# Subpopulation temp
+# MDS Coord -0.2083 0.0122
+# UID: "FAN GENG 6"
+
+# Variety name TAICHUNG 188::IRGC 78209-1
+# IRIS ID IRIS 313-11981
+# Subpopulation temp
+# MDS Coord -0.2086 0.0123
+# UID: "TAICHUNG 188"
+ 
+# Variety name ZHENGSHAN97
+# IRIS ID CX133
+# Subpopulation ind1A
+# MDS Coord 0.0832 0.0234
+# UID: Zhengshan97
+
+##---------------------------
+TRegGA_DIR=/N/dc2/projects/brendelgroup/TRegGA/TRegGA_v1
+source ${TRegGA_DIR}/TRegGA.source
+EMAIL="huangcy@indiana.edu"
+WALLTIME=12
+VMEM=120
+PPN=12
+CHECKONLY=no
+NUMPROC=30
+CULTIVAR='\"TAICHUNG 188\"'
+SYNONYM="TAICHUNG188"
+TARGET=OsjSWEET13
+REFERENCE=OsjCHR12
+FROM=17292001
+TO=17315000
+
+##--------------------------
+echo "
+#!/bin/bash
+#PBS -m abe
+#PBS -l nodes=1:ppn=${PPN},vmem=${VMEM}gb,walltime=${WALLTIME}:00:00
+#PBS -M ${EMAIL}
+#PBS -N TRegGA_${SYNONYM}-reads
+#PBS -j oe
+
+module add bowtie/1.1.1
+module add bowtie2/2.2.3
+module add bwa/0.7.6a
+module add java/1.8.0_40
+module add python
+module add R
+module add ngsutils
+module add samtools
+module add soapdenovo2
+
+
+TRegGA_DIR=${TRegGA_DIR}
+source ${TRegGA_DIR}/TRegGA.config
+source ${SRCDIR}/PAGIT/PAGIT/sourceme.pagit
+cd ${TRegGA_DIR}
+
+# For the read prep and no more.
+make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} -f Makefile_TRegGA-orig ${TRegGA_DIR}/reads/${SYNONYM}/${SYNONYM}_1.fa >& err_${SYNONYM}-reads
+
+# For the read prep and denovo assembly and no more.
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} -f Makefile_TRegGA-orig ${TRegGA_DIR}/assembly/denovo/${SYNONYM}/${SYNONYM}-GF/${SYNONYM}-GF.gapfilled.final.fa >& err_${SYNONYM}-denovo
+
+# For the target prep only
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig ${TRegGA_DIR}/targets/${TARGET}.embl >& err_${SYNONYM}-TargetPrep-${TARGET}
+
+# For the entire workflow
+# make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=${SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig >& err_${SYNONYM}-on-${TARGET}
+
+
+##---------------------------
+# Traverse to ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION for the assembly results.
+# The assembly results can be visually evaluated against the target using the Artemis Comparson Tool (ACT):
+# ${SRCDIR}/PAGIT/PAGIT/bin/act ${TARGET}.embl blastn.out ${SYNONYM}-${TARGET}.embl
+# The gene structure predictions of the assembly by GenomeThreader can be found in the file gth.OsjPRT-on-${SYNONYM}-${TARGET}.
+
+##---------------------------
+## To submit the job directly
+# qsub qsub_TRegGA_${SYNONYM}-on-${TARGET}
+## To submit the job that depends on the finish of another job with Job_Id 123456.m1.mason
+# qsub -W depend=afterok:123456.m1.mason qsub_TRegGA_${SYNONYM}-on-${TARGET}
+
+##----------------------------
+## To clean up files after the job is done
+# cd ${TRegGA_DIR}/reads/${SYNONYM}
+# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_GPR_${SYNONYM} cleanup
+# cd ${TRegGA_DIR}/assembly/denovo/${SYNONYM}
+# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_denovo_${SYNONYM} cleanup
+# cd ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}
+# make -I ./ -I ../ -I ../../ -I ../../../ -f Makefile_RGA_${SYNONYM}-on-${TARGET} cleanup
+
+##-----------------------------
+## To clean up files for all jobs under ${TRegGA_DIR}
+# cd ${TRegGA_DIR}
+# find . -path "*ALG/tmp" -type d | xargs -I {} \rm -r {}
+# find . -path "*GF/alignoutput" -type d | xargs -I {} \rm -r {}
+# find . -path "*GF/reads" -type d | xargs -I {} \rm -r {}
+
+" > qsub_TRegGA_${SYNONYM}-reads
+

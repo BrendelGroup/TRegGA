@@ -1,0 +1,85 @@
+##---------------------------
+# Gene at Japonica: OS03G0788300
+# Description: Os03g0788300 protein; Putative cell wall protein [Source:UniProtKB/TrEMBL;Acc:Q6F3A8]
+# Location: Chromosome 3: 32,744,711-32,751,054 forward strand.
+# About this gene: This gene has 2 transcripts (splice variants), 44 orthologues and 1 paralogue.
+# Coordinates to assemble (CY): chr3:32735001-32760000 (25 Kb) 
+
+# Gene at Indica: BGIOSGA013696
+# Description: Putative uncharacterized protein [Source:UniProtKB/TrEMBL;Acc:B8AKY9]
+# Location: Chromosome 3: 36,991,002-36,995,379 forward strand.
+# About this gene: This gene has 1 transcript (splice variant), 43 orthologues and 2 paralogues.
+# Coordinates to assemble (CY): chr3:36980001-37005000 (25 Kb)
+
+# MSU locus ID: LOC_Os03g57430
+# (??? coordinates from TR) Locus Coordinates (Nipponbare): Chr6:5759685 - 5761518
+# Location Chromosome 3: 32,744,711-32,751,063 forward strand.
+# About this gene: This gene has 1 transcript (splice variant).
+# Compare indica IR64 to japonica reference
+# Coordinates to assemble (TR): Chr6: flank with 10kb on each side.
+# 3KRGP: CX403   IR64a   Philippines     Indica
+
+##---------------------------
+
+TRegGA_DIR=/N/dc2/projects/brendelgroup/huangcy/TRegGA
+SRCDIR=/N/dc2/projects/brendelgroup/TRegGA/src
+EMAIL="huangcy@indiana.edu"
+WALLTIME=8
+CHECKONLY=no
+NUMPROC=30
+
+CULTIVAR="IR64a"
+SYNONYM="IR64"
+
+# OsjS5 (25 Kb)
+TARGET=OsjS5
+REFERENCE=OsjCHR3
+FROM=32735001
+TO=32760000
+
+# OsiS5 (25 Kb)
+TARGET=OsiS5
+REFERENCE=OsiCHR3
+FROM=36980001
+TO=37005000
+
+
+##--------------------------
+echo "
+#!/bin/bash
+#PBS -m abe
+#PBS -l nodes=1:ppn=30,vmem=500gb,walltime=${WALLTIME}:00:00
+#PBS -M ${EMAIL}
+#PBS -N TRegGA_${SYNONYM}-on-${TARGET}
+#PBS -j oe
+
+module add bowtie/1.1.1
+module add bowtie2/2.2.3
+module add bwa/0.7.6a
+module add java
+module add python
+module add R
+module add ngsutils
+module add samtools
+module add soapdenovo2
+
+
+TRegGA_DIR=${TRegGA_DIR}
+source ${TRegGA_DIR}/TRegGA.source
+cd ${TRegGA_DIR}
+
+make -I./ -I../ -I../../ -I../../../ CHECKONLY=${CHECKONLY} NUMPROC=${NUMPROC} CULTIVAR=${CULTIVAR} SYNONYM=$\
+{SYNONYM} TARGET=${TARGET} REFERENCE=${REFERENCE} FROM=${FROM} TO=${TO} -f Makefile_TRegGA-orig >& err_${SYNO\
+NYM}-on-${TARGET}
+
+##---------------------------
+# Traverse to ${TRegGA_DIR}/assembly/rfguided/${SYNONYM}-on-${TARGET}/EVALUATION for the assembly results.
+# The assembly results can be visually evaluated against the target using the Artemis Comparson Tool (ACT):
+# ${SRCDIR}/PAGIT/PAGIT/bin/act ${TARGET}.embl blastn.out ${SYNONYM}-${TARGET}.embl
+# The gene structure predictions of the assembly by GenomeThreader can be found in the file gth.OsjPRT-on-${S\
+YNONYM}-${TARGET}.
+
+" > qsub_TRegGA_${SYNONYM}-on-${TARGET}
+
+# qsub qsub_TRegGA_${SYNONYM}-on-${TARGET}
+# qsub -W depend=afterok:xxxxxx.m1.mason qsub_TRegGA_${SYNONYM}-on-${TARGET}

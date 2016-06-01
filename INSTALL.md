@@ -99,6 +99,19 @@ Otherwise, we recommend using virtualenv and pip.
 pip install biopython
 ```
 
+### BLAST
+
+* See https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download.
+* Last update: Dec. 2015
+
+```bash
+cd $TRegGA_DIR/local/src/
+mkdir blast
+cd blast
+wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.3.0/ncbi-blast-2.3.0+-x64-linux.tar.gz
+tar -xzf ncbi-blast-2.3.0+-x64-linux.tar.gz
+export PATH=$PATH:$TRegGA_DIR/local/src/blast//ncbi-blast-2.3.0+/bin
+```
 
 ### Bowtie
 
