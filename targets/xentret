@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -exo pipefail
-source ../TRegGA.source
+source ../TRegGA.config
 
 for chr in {1..12}
 do

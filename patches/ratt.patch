@@ -1,6 +1,0 @@
-244c244,246
-< 	  if (defined(@{$$ref_shift{$refName}})) {
----
-> ### VB Note: the following "defined(@array)" no longer works in current Perl versions ... (May 24, 2016)
-> #	  if (defined(@{$$ref_shift{$refName}})) {
->  	  if (1) {
